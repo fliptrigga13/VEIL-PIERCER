@@ -1,0 +1,3149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VEILPIERCER — AI Agent Observatory</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Fira+Code:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    /* ══════════════════════════════════════════════════
+   VEILPIERCER — THE DEFINITIVE PITCH PAGE
+   Brutal editorial dark · surgical neon accents
+   Real proof meets infinite vision
+══════════════════════════════════════════════════ */
+    :root {
+      --black: #040608;
+      --void: #080c10;
+      --panel: #0c1219;
+      --rim: #14222e;
+      --rim2: #1e3448;
+      --paper: #f0ead8;
+      --cream: #e4dcc8;
+      --vis: #00e5ff;
+      --saf: #00ff88;
+      --priv: #c84dff;
+      --warn: #ff9500;
+      --red: #ff1f3d;
+      --gold: #ffd100;
+      --t1: #ddeaf5;
+      --t2: #4a6a80;
+      --t3: #1e3448;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--black);
+      color: var(--t1);
+      font-family: 'Fira Code', monospace;
+      overflow-x: hidden;
+    }
+
+    /* ── CURSOR ── */
+    #cur,
+    #cur-r {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    #cur {
+      width: 10px;
+      height: 10px;
+      background: var(--vis);
+      mix-blend-mode: screen;
+    }
+
+    #cur-r {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(0, 229, 255, .35);
+      transition: all .14s ease;
+    }
+
+    /* ── GRAIN ── */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: .35;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.05'/%3E%3C/svg%3E");
+    }
+
+    /* ── NAV ── */
+    #nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      padding: 0 48px;
+      height: 54px;
+      background: rgba(4, 6, 8, .92);
+      border-bottom: 1px solid var(--rim);
+      backdrop-filter: blur(24px);
+    }
+
+    .n-logo {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 5px;
+      color: var(--vis);
+    }
+
+    .n-right {
+      margin-left: auto;
+      display: flex;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .n-right a {
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--t2);
+      text-decoration: none;
+      transition: color .2s;
+    }
+
+    .n-right a:hover {
+      color: var(--vis);
+    }
+
+    .n-cta {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      padding: 8px 22px;
+      background: var(--vis);
+      color: var(--black);
+      text-decoration: none;
+      margin-left: 16px;
+      transition: all .15s;
+    }
+
+    .n-cta:hover {
+      background: #fff;
+      transform: translateY(-1px);
+    }
+
+    /* ══════════════ HERO ══════════════ */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      padding: 100px 48px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      filter: contrast(1.6) brightness(1.1) saturate(1.2);
+      opacity: 0.72;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(0, 229, 255, .028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 229, 255, .028) 1px, transparent 1px);
+      background-size: 72px 72px;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eye {
+      font-size: 9px;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--vis);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .hero-eye::before {
+      content: '';
+      width: 44px;
+      height: 1px;
+      background: var(--vis);
+    }
+
+    .hero-h1 {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(56px, 10vw, 148px);
+      line-height: .88;
+      letter-spacing: -3px;
+      margin-bottom: 48px;
+    }
+
+    .h1-dim {
+      color: rgba(221, 234, 245, .12);
+    }
+
+    .h1-accent {
+      color: var(--vis);
+    }
+
+    .h1-red {
+      color: var(--red);
+    }
+
+    .hero-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(18px, 2.2vw, 28px);
+      color: rgba(221, 234, 245, .5);
+      line-height: 1.5;
+      max-width: 580px;
+      margin-bottom: 52px;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    /* .hs — no shared styles; tier-specific styles applied inline */
+
+    .hs .n {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .hs .l {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--t2);
+      line-height: 1.6;
+    }
+
+    .hero-ctas {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 3px;
+      padding: 16px 44px;
+      background: var(--vis);
+      color: var(--black);
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: all .15s;
+      cursor: none;
+    }
+
+    .btn-primary:hover {
+      background: #fff;
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--t2);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: color .2s;
+    }
+
+    .btn-ghost:hover {
+      color: var(--vis);
+    }
+
+    .hero-ticker-wrap {
+      position: relative;
+      z-index: 2;
+      border-top: 1px solid var(--rim);
+      margin-top: auto;
+      padding-top: 20px;
+      overflow: hidden;
+    }
+
+    .hero-ticker {
+      display: flex;
+      gap: 0;
+      white-space: nowrap;
+      animation: tick 20s linear infinite;
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--t2);
+    }
+
+    @keyframes tick {
+      0% {
+        transform: translateX(0)
+      }
+
+      100% {
+        transform: translateX(-50%)
+      }
+    }
+
+    .tsep {
+      margin: 0 20px;
+      color: var(--rim2);
+    }
+
+    .thigh {
+      color: var(--vis);
+    }
+
+    /* ══════════ WAVEFORM STRIP ══════════ */
+    .wave-strip {
+      display: block;
+      width: 100%;
+      height: 90px;
+      background: var(--void);
+    }
+
+    /* ══════════ SECTION BASE ══════════ */
+    .sec {
+      padding: 110px 48px;
+    }
+
+    .sec-tag {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--t2);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sec-tag::after {
+      content: '';
+      flex: 1;
+      max-width: 180px;
+      height: 1px;
+      background: var(--rim);
+    }
+
+    /* ══════════ WHY ══════════ */
+    #why {
+      background: var(--void);
+    }
+
+    .why-lead {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(24px, 3vw, 44px);
+      line-height: 1.4;
+      color: rgba(221, 234, 245, .75);
+      max-width: 800px;
+      margin-bottom: 80px;
+    }
+
+    .why-lead strong {
+      color: var(--t1);
+      font-style: normal;
+    }
+
+    .why-lead em {
+      color: var(--vis);
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--rim);
+    }
+
+    .why-card {
+      background: var(--void);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      transition: background .2s;
+    }
+
+    .why-card:hover {
+      background: #0f1820;
+    }
+
+    .why-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+    }
+
+    .wc-v::before {
+      background: var(--vis);
+    }
+
+    .wc-s::before {
+      background: var(--saf);
+    }
+
+    .wc-p::before {
+      background: var(--priv);
+    }
+
+    .wc-bg {
+      position: absolute;
+      bottom: -24px;
+      right: -12px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 120px;
+      line-height: 1;
+      color: rgba(255, 255, 255, .025);
+      pointer-events: none;
+      letter-spacing: -4px;
+    }
+
+    .wc-icon {
+      font-size: 28px;
+      margin-bottom: 22px;
+    }
+
+    .wc-tag {
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .wc-v .wc-tag {
+      color: var(--vis);
+    }
+
+    .wc-s .wc-tag {
+      color: var(--saf);
+    }
+
+    .wc-p .wc-tag {
+      color: var(--priv);
+    }
+
+    .wc-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      line-height: 1.3;
+      margin-bottom: 18px;
+      color: var(--t1);
+    }
+
+    .wc-body {
+      font-size: 11px;
+      color: rgba(221, 234, 245, .4);
+      line-height: 1.9;
+      margin-bottom: 30px;
+    }
+
+    .wc-stat {
+      border-top: 1px solid var(--rim);
+      padding-top: 22px;
+    }
+
+    .wc-stat .big {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 34px;
+      line-height: 1;
+      margin-bottom: 5px;
+    }
+
+    .wc-v .wc-stat .big {
+      color: var(--vis);
+    }
+
+    .wc-s .wc-stat .big {
+      color: var(--saf);
+    }
+
+    .wc-p .wc-stat .big {
+      color: var(--priv);
+    }
+
+    .wc-stat .lbl {
+      font-size: 10px;
+      color: var(--t2);
+      letter-spacing: 1px;
+      line-height: 1.6;
+    }
+
+    /* ══════════ INCIDENTS ══════════ */
+    #incidents {
+      background: var(--black);
+    }
+
+    .inc-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 60px;
+    }
+
+    .inc-h {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 68px);
+      letter-spacing: -2px;
+      line-height: .95;
+    }
+
+    .inc-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--t2);
+      max-width: 220px;
+      text-align: right;
+      line-height: 1.7;
+    }
+
+    .inc-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .inc-table th {
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--t2);
+      padding: 0 0 14px;
+      border-bottom: 1px solid var(--rim);
+      text-align: left;
+      font-weight: 400;
+    }
+
+    .inc-table th:last-child {
+      text-align: right;
+    }
+
+    .inc-table td {
+      padding: 22px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .04);
+      vertical-align: top;
+    }
+
+    .inc-table tr:hover td {
+      background: rgba(255, 255, 255, .01);
+    }
+
+    .td-cost {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 20px;
+      white-space: nowrap;
+      padding-right: 28px;
+    }
+
+    .td-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      padding-right: 28px;
+    }
+
+    .td-desc {
+      font-size: 10px;
+      color: rgba(221, 234, 245, .38);
+      line-height: 1.85;
+      max-width: 380px;
+      padding-right: 28px;
+    }
+
+    .td-pill {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .inc-pill {
+      font-size: 7.5px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 3px 9px;
+      border: 1px solid;
+      display: inline-block;
+    }
+
+    /* ══════════ PAPER: BUYERS ══════════ */
+    #buyers {
+      background: var(--paper);
+      color: var(--black);
+    }
+
+    .buyers-h {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(44px, 7vw, 96px);
+      line-height: .92;
+      letter-spacing: -3px;
+      margin-bottom: 10px;
+    }
+
+    .buyers-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(17px, 1.8vw, 24px);
+      color: rgba(10, 10, 10, .4);
+      margin-bottom: 64px;
+    }
+
+    .buyer-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .buyer-row {
+      display: grid;
+      grid-template-columns: 72px 1fr 240px;
+      gap: 36px;
+      align-items: start;
+      border-top: 2px solid rgba(10, 10, 10, .1);
+      padding: 32px 0;
+      transition: all .2s;
+      cursor: default;
+    }
+
+    .buyer-row:last-child {
+      border-bottom: 2px solid rgba(10, 10, 10, .1);
+    }
+
+    .buyer-row:hover {
+      background: rgba(10, 10, 10, .03);
+      margin: 0 -48px;
+      padding: 32px 48px;
+    }
+
+    .br-num {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 44px;
+      color: rgba(10, 10, 10, .07);
+      line-height: 1;
+    }
+
+    .br-name {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: clamp(13px, 1.5vw, 18px);
+      letter-spacing: -.5px;
+      margin-bottom: 8px;
+    }
+
+    .br-desc {
+      font-size: 11px;
+      color: rgba(10, 10, 10, .5);
+      line-height: 1.85;
+      max-width: 460px;
+    }
+
+    .br-right {
+      text-align: right;
+    }
+
+    .br-icon {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .br-proto {
+      font-size: 8px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 4px 9px;
+      border: 1px solid;
+      display: inline-block;
+      margin-top: 5px;
+    }
+
+    /* ══════════ DARK: FEATURES (the vision) ══════════ */
+    #features {
+      background: var(--void);
+    }
+
+    .feat-intro {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: end;
+      margin-bottom: 80px;
+    }
+
+    .feat-h {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(40px, 5vw, 72px);
+      letter-spacing: -2px;
+      line-height: .95;
+    }
+
+    .feat-h .acc {
+      color: var(--vis);
+    }
+
+    .feat-desc {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: rgba(221, 234, 245, .45);
+      line-height: 1.85;
+    }
+
+    .feat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--rim);
+    }
+
+    .feat-card {
+      background: var(--void);
+      padding: 36px 28px;
+      transition: background .2s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feat-card:hover {
+      background: var(--panel);
+    }
+
+    .feat-card::before {
+      content: attr(data-n);
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 52px;
+      letter-spacing: -2px;
+      color: rgba(255, 255, 255, .04);
+      line-height: 1;
+    }
+
+    .fc-icon {
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .fc-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      color: var(--t1);
+      text-transform: uppercase;
+    }
+
+    .fc-body {
+      font-size: 10px;
+      color: rgba(221, 234, 245, .38);
+      line-height: 1.85;
+    }
+
+    .fc-vis .fc-title {
+      color: var(--vis);
+    }
+
+    .fc-saf .fc-title {
+      color: var(--saf);
+    }
+
+    .fc-priv .fc-title {
+      color: var(--priv);
+    }
+
+    .fc-gold .fc-title {
+      color: var(--gold);
+    }
+
+    /* ══════════ STAT BAND ══════════ */
+    #statband {
+      background: var(--vis);
+      color: var(--black);
+      padding: 48px;
+    }
+
+    .statband-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: rgba(0, 0, 0, .1);
+    }
+
+    .sb-item {
+      background: var(--vis);
+      padding: 32px 28px;
+      text-align: center;
+    }
+
+    .sb-item:hover {
+      background: #00ccee;
+    }
+
+    .sb-n {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 44px;
+      letter-spacing: -2px;
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .sb-l {
+      font-size: 9px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: rgba(0, 0, 0, .55);
+    }
+
+    /* ══════════ PROTOCOLS ══════════ */
+    #protocols {
+      background: var(--paper);
+      color: var(--black);
+    }
+
+    .proto-h {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(36px, 5vw, 66px);
+      letter-spacing: -2px;
+      line-height: .95;
+      margin-bottom: 8px;
+    }
+
+    .proto-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: rgba(10, 10, 10, .38);
+      margin-bottom: 56px;
+    }
+
+    .proto-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: rgba(10, 10, 10, .08);
+    }
+
+    .proto-card {
+      background: var(--paper);
+      padding: 40px 34px;
+      border-top: 3px solid;
+      transition: background .15s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .proto-card:hover {
+      background: var(--cream);
+    }
+
+    .proto-card::after {
+      content: attr(data-mode);
+      position: absolute;
+      bottom: -16px;
+      right: -8px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 80px;
+      letter-spacing: -4px;
+      opacity: .045;
+      line-height: 1;
+      pointer-events: none;
+    }
+
+    .pc-lock {
+      border-color: var(--red);
+    }
+
+    .pc-amp {
+      border-color: var(--saf);
+    }
+
+    .pc-sel {
+      border-color: var(--warn);
+    }
+
+    .pc-nom {
+      border-color: var(--vis);
+    }
+
+    .pc-name {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 24px;
+      letter-spacing: .5px;
+      margin-bottom: 4px;
+    }
+
+    .pc-lock .pc-name {
+      color: var(--red);
+    }
+
+    .pc-amp .pc-name {
+      color: #00cc66;
+    }
+
+    .pc-sel .pc-name {
+      color: var(--warn);
+    }
+
+    .pc-nom .pc-name {
+      color: #0099bb;
+    }
+
+    .pc-trigger {
+      font-size: 9px;
+      color: rgba(10, 10, 10, .3);
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+
+    .pc-desc {
+      font-size: 11px;
+      color: rgba(10, 10, 10, .52);
+      line-height: 1.9;
+      margin-bottom: 18px;
+    }
+
+    .pc-when {
+      font-size: 9px;
+      letter-spacing: .5px;
+      color: rgba(10, 10, 10, .27);
+      border-top: 1px solid rgba(10, 10, 10, .08);
+      padding-top: 14px;
+      line-height: 1.8;
+    }
+
+    /* ══════════ VISION SECTION ══════════ */
+    #vision {
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #vision-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .vision-content {
+      position: relative;
+      z-index: 2;
+      padding: 110px 48px;
+    }
+
+    .vision-tag {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--vis);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .vision-tag::before {
+      content: '';
+      width: 40px;
+      height: 1px;
+      background: var(--vis);
+    }
+
+    .vision-h {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(44px, 6.5vw, 96px);
+      letter-spacing: -3px;
+      line-height: .92;
+      margin-bottom: 32px;
+    }
+
+    .vision-h .dim {
+      color: rgba(221, 234, 245, .12);
+    }
+
+    .vision-h .bright {
+      color: var(--vis);
+    }
+
+    .vision-body {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(17px, 1.8vw, 22px);
+      color: rgba(221, 234, 245, .5);
+      line-height: 1.75;
+      max-width: 720px;
+      margin-bottom: 60px;
+    }
+
+    .vision-body strong {
+      color: var(--t1);
+    }
+
+    .vision-body em {
+      color: var(--vis);
+      font-style: italic;
+    }
+
+    .enterprise-stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 20px;
+      border: 1px solid var(--rim2);
+      padding: 20px 28px;
+      margin-bottom: 40px;
+    }
+
+    .es-n {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 36px;
+      color: var(--gold);
+    }
+
+    .es-l {
+      font-size: 10px;
+      color: var(--t2);
+      letter-spacing: 1px;
+      line-height: 1.6;
+    }
+
+    /* ══════════ PRICING ══════════ */
+    #pricing {
+      background: var(--void);
+    }
+
+    .price-h {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: clamp(44px, 7vw, 96px);
+      letter-spacing: -3px;
+      line-height: .92;
+      margin-bottom: 8px;
+    }
+
+    .price-h .v {
+      color: var(--vis);
+    }
+
+    .price-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--t2);
+      margin-bottom: 64px;
+    }
+
+    .price-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--rim);
+    }
+
+    .p-card {
+      background: var(--void);
+      padding: 48px 34px;
+      position: relative;
+      transition: background .15s;
+    }
+
+    .p-card:hover {
+      background: var(--panel);
+    }
+
+    .p-card.feat {
+      background: var(--vis);
+    }
+
+    .p-card.feat * {
+      color: var(--black) !important;
+    }
+
+    .p-badge {
+      position: absolute;
+      top: 0;
+      right: 32px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 8px;
+      letter-spacing: 2px;
+      background: var(--black);
+      color: var(--vis) !important;
+      padding: 4px 11px;
+    }
+
+    .p-tier {
+      font-size: 8px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--t2);
+      margin-bottom: 14px;
+    }
+
+    .p-card.feat .p-tier {
+      color: rgba(0, 0, 0, .45) !important;
+    }
+
+    .p-amt {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 68px;
+      line-height: 1;
+      letter-spacing: -3px;
+      margin-bottom: 5px;
+    }
+
+    .p-per {
+      font-size: 9px;
+      color: var(--t2);
+      margin-bottom: 30px;
+      letter-spacing: 1px;
+    }
+
+    .p-feats {
+      list-style: none;
+      margin-bottom: 34px;
+    }
+
+    .p-feats li {
+      font-size: 10px;
+      line-height: 1.7;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .05);
+      display: flex;
+      gap: 9px;
+      color: rgba(221, 234, 245, .55);
+    }
+
+    .p-card.feat .p-feats li {
+      border-color: rgba(0, 0, 0, .08) !important;
+      color: rgba(0, 0, 0, .65) !important;
+    }
+
+    .p-feats li::before {
+      content: '→';
+      flex-shrink: 0;
+      color: var(--vis);
+    }
+
+    .p-card.feat .p-feats li::before {
+      color: var(--black) !important;
+    }
+
+    .p-btn {
+      display: block;
+      width: 100%;
+      padding: 15px;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      text-align: center;
+      border: none;
+      cursor: none;
+      transition: all .15s;
+    }
+
+    .pb-out {
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, .15);
+      color: var(--t1);
+    }
+
+    .pb-out:hover {
+      background: var(--t1);
+      color: var(--black);
+    }
+
+    .pb-dark {
+      background: var(--black);
+      color: var(--vis);
+    }
+
+    .pb-dark:hover {
+      background: var(--void);
+    }
+
+    /* ══════════ FOOTER CTA ══════════ */
+    #footer {
+      background: var(--paper);
+      color: var(--black);
+      padding: 130px 48px 90px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #footer::before {
+      content: 'NOW.';
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 28vw;
+      position: absolute;
+      bottom: -60px;
+      right: -30px;
+      color: rgba(10, 10, 10, .04);
+      line-height: 1;
+      pointer-events: none;
+      letter-spacing: -8px;
+    }
+
+    .footer-q {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: clamp(30px, 4.5vw, 62px);
+      line-height: 1.2;
+      margin-bottom: 12px;
+      max-width: 720px;
+    }
+
+    .footer-q em {
+      color: var(--red);
+      font-style: normal;
+    }
+
+    .footer-note {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: rgba(10, 10, 10, .4);
+      margin-bottom: 44px;
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    .footer-note strong {
+      color: rgba(10, 10, 10, .65);
+    }
+
+    .footer-btns {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      position: relative;
+    }
+
+    .btn-dark {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 2px;
+      padding: 17px 46px;
+      background: var(--black);
+      color: var(--paper);
+      border: none;
+      text-decoration: none;
+      display: inline-block;
+      transition: all .15s;
+      cursor: none;
+    }
+
+    .btn-dark:hover {
+      background: var(--red);
+    }
+
+    .footer-legal {
+      font-size: 9px;
+      color: rgba(10, 10, 10, .28);
+      letter-spacing: 1px;
+      max-width: 260px;
+      line-height: 1.7;
+    }
+
+    /* ── UTIL ── */
+    canvas.strip {
+      display: block;
+      width: 100%;
+      height: 90px;
+      background: var(--black);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity .75s ease, transform .75s ease;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media(max-width:960px) {
+
+      .three-col,
+      .feat-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .feat-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .proto-grid,
+      .price-cards {
+        grid-template-columns: 1fr;
+      }
+
+      .buyer-row {
+        grid-template-columns: 56px 1fr;
+      }
+
+      .br-right {
+        display: none;
+      }
+
+      .statband-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .feat-intro {
+        grid-template-columns: 1fr;
+      }
+
+      .inc-top {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .inc-note {
+        text-align: left;
+      }
+
+      .sec,
+      .vision-content {
+        padding: 70px 24px;
+      }
+
+      #hero {
+        padding: 90px 24px 50px;
+      }
+
+      .hero-stats {
+        flex-wrap: wrap;
+        gap: 28px;
+      }
+
+      .n-right a {
+        display: none;
+      }
+    }
+
+    /* ══════════ AGENT FLOW OBSERVATORY ══════════ */
+    #observatory {
+      background: #020205;
+      position: relative;
+      overflow: hidden;
+      padding: 0;
+    }
+
+    #obs-canvas-wrap {
+      position: relative;
+      width: 100%;
+      height: 72vh;
+      min-height: 520px;
+    }
+
+    #obs-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      filter: contrast(1.6) saturate(1.15);
+    }
+
+    #obs-ui {
+      position: absolute;
+      top: 24px;
+      left: 24px;
+      width: 300px;
+      background: rgba(2, 2, 8, 0.96);
+      padding: 24px;
+      border: 1px solid var(--vis);
+      border-radius: 4px;
+      backdrop-filter: blur(20px);
+      z-index: 10;
+    }
+
+    .obs-title {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 900;
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--vis);
+      margin-bottom: 16px;
+    }
+
+    .obs-metric {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      letter-spacing: 1px;
+      color: var(--t2);
+      margin-bottom: 6px;
+    }
+
+    .obs-metric span {
+      color: var(--vis);
+      font-weight: 700;
+    }
+
+    #obs-alert {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: rgba(255, 68, 0, 0.13);
+      border-left: 3px solid var(--red);
+      font-size: 10px;
+      color: #ffaa88;
+      letter-spacing: .5px;
+      line-height: 1.6;
+      transition: all .3s;
+    }
+
+    #obs-alert.stable {
+      background: rgba(0, 255, 136, 0.07);
+      border-left-color: var(--saf);
+      color: var(--saf);
+    }
+
+    .obs-controls {
+      position: absolute;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .obs-btn {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: rgba(2, 2, 8, 0.92);
+      color: var(--vis);
+      border: 1px solid var(--vis);
+      padding: 11px 18px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all .15s;
+      text-transform: uppercase;
+    }
+
+    .obs-btn:hover {
+      background: var(--vis);
+      color: var(--black);
+    }
+
+    .obs-btn.danger {
+      color: var(--red);
+      border-color: var(--red);
+    }
+
+    .obs-btn.danger:hover {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .obs-btn.safe {
+      color: var(--saf);
+      border-color: var(--saf);
+    }
+
+    .obs-btn.safe:hover {
+      background: var(--saf);
+      color: var(--black);
+    }
+
+    #observatory .obs-header {
+      padding: 60px 48px 0;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* ── NEXUS LIVE CONNECTION BAR ── */
+    #nexus-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 32px;
+      background: rgba(0, 0, 0, 0.92);
+      border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 0 20px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 10.5px;
+      z-index: 9999;
+      backdrop-filter: blur(12px);
+      transition: border-color 0.4s;
+    }
+
+    #nexus-bar.connected {
+      border-bottom-color: rgba(0, 229, 255, 0.4);
+    }
+
+    #nexus-bar.error {
+      border-bottom-color: rgba(255, 50, 50, 0.4);
+    }
+
+    .nb-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #444;
+      flex-shrink: 0;
+      transition: background 0.4s;
+    }
+
+    #nexus-bar.connected .nb-dot {
+      background: #00e5ff;
+      box-shadow: 0 0 8px #00e5ff;
+      animation: nbpulse 2s infinite;
+    }
+
+    #nexus-bar.error .nb-dot {
+      background: #ff3232;
+    }
+
+    @keyframes nbpulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.35;
+      }
+    }
+
+    .nb-label {
+      color: rgba(0, 229, 255, 0.7);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .nb-sep {
+      color: rgba(255, 255, 255, 0.12);
+      margin: 0 2px;
+    }
+
+    .nb-metric {
+      color: rgba(255, 255, 255, 0.45);
+      font-size: 10px;
+      white-space: nowrap;
+    }
+
+    .nb-metric b {
+      color: #00e5ff;
+      font-weight: 600;
+    }
+
+    .nb-metric.warn b {
+      color: #f5a623;
+    }
+
+    .nb-metric.alert b {
+      color: #ff4848;
+    }
+
+    .nb-mode {
+      color: rgba(0, 229, 255, 0.6);
+      font-size: 9.5px;
+      letter-spacing: 0.14em;
+      margin-left: auto;
+      padding-right: 4px;
+    }
+
+    .nb-healer {
+      font-size: 9.5px;
+      color: rgba(255, 165, 0, 0.7);
+      white-space: nowrap;
+    }
+
+    /* Push page content down to clear the bar */
+    body {
+      padding-top: 32px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ── NEXUS ANTIGRAVITY COSMOS LIVE BAR ───────────────────────────────── -->
+  <div id="nexus-bar">
+    <div class="nb-dot"></div>
+    <span class="nb-label" id="nb-status">NEXUS · CONNECTING…</span>
+    <span class="nb-sep">│</span>
+    <span class="nb-metric" id="nb-cpu">CPU <b>–</b></span>
+    <span class="nb-metric" id="nb-ram">RAM <b>–</b></span>
+    <span class="nb-metric" id="nb-signals">SIGNALS <b>–</b></span>
+    <span class="nb-metric" id="nb-agents">AGENTS <b>–</b></span>
+    <span class="nb-healer" id="nb-healer"></span>
+    <span class="nb-mode" id="nb-mode"></span>
+  </div>
+
+  <div id="cur"></div>
+  <div id="cur-r"></div>
+
+  <!-- NAV -->
+  <nav id="nav">
+    <div class="n-logo">VEILPIERCER</div>
+    <div class="n-right">
+      <a href="#why">The Problem</a>
+      <a href="#buyers">Who</a>
+      <a href="#features">Features</a>
+      <a href="#protocols">Protocols</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#pricing" class="n-cta">Get Access →</a>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════ -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-grid"></div>
+
+    <div class="hero-content">
+      <div class="hero-eye reveal">AI Agent Observatory · Production Control Plane</div>
+      <h1 class="hero-h1 reveal">
+        <span class="h1-dim">YOUR</span><br>
+        <span class="h1-dim">AGENTS</span><br>
+        <span class="h1-red">FAIL</span><br>
+        <span class="h1-accent">SILENTLY.</span>
+      </h1>
+      <p class="hero-sub reveal">
+        A control plane for the three things that silently kill production AI systems —
+        before they cost you $4,200 a day, $2.4M in fines, or a patient's life.
+      </p>
+      <div class="hero-stats reveal">
+        <div class="hs">
+          <div class="n" style="color:var(--vis)">$4,200</div>
+          <div class="l">Daily token burn<br>before anyone noticed</div>
+        </div>
+        <div class="hs">
+          <div class="n" style="color:var(--priv)">$2.4M</div>
+          <div class="l">GDPR fine from<br>one log line</div>
+        </div>
+        <div class="hs">
+          <div class="n" style="color:var(--warn)">90 days</div>
+          <div class="l">Average drift<br>goes undetected</div>
+        </div>
+        <div class="hs">
+          <div class="n" style="color:var(--gold)">67%</div>
+          <div class="l">Enterprises on AI<br>agents by 2026</div>
+        </div>
+      </div>
+      <div class="hero-ctas reveal">
+        <a href="#pricing" class="btn-primary">Get Veilpiercer</a>
+        <a href="#why" class="btn-ghost">See why it matters →</a>
+      </div>
+    </div>
+
+    <div class="hero-ticker-wrap reveal">
+      <div class="hero-ticker">
+        <span>👁 <span class="thigh">VISIBILITY</span> — YOU CAN'T FIX WHAT YOU CAN'T SEE</span><span
+          class="tsep">·</span>
+        <span>🛡 <span class="thigh">SAFETY</span> — ONE FAULT CASCADES INTO EVERYTHING</span><span
+          class="tsep">·</span>
+        <span>🔒 <span class="thigh">PRIVACY</span> — EVERY LOG LINE IS A BREACH VECTOR</span><span
+          class="tsep">·</span>
+        <span>⚡ LOCK DOWN IN ONE COMMAND</span><span class="tsep">·</span>
+        <span>🌐 UNIVERSAL AGENT ORCHESTRATION</span><span class="tsep">·</span>
+        <span>📊 50M+ PRODUCTION FAILURES ANALYZED</span><span class="tsep">·</span>
+        <span>👁 <span class="thigh">VISIBILITY</span> — YOU CAN'T FIX WHAT YOU CAN'T SEE</span><span
+          class="tsep">·</span>
+        <span>🛡 <span class="thigh">SAFETY</span> — ONE FAULT CASCADES INTO EVERYTHING</span><span
+          class="tsep">·</span>
+        <span>🔒 <span class="thigh">PRIVACY</span> — EVERY LOG LINE IS A BREACH VECTOR</span><span
+          class="tsep">·</span>
+        <span>⚡ LOCK DOWN IN ONE COMMAND</span><span class="tsep">·</span>
+        <span>🌐 UNIVERSAL AGENT ORCHESTRATION</span><span class="tsep">·</span>
+        <span>📊 50M+ PRODUCTION FAILURES ANALYZED</span><span class="tsep">·</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAVE STRIP 1 -->
+  <canvas class="strip" id="strip1"></canvas>
+
+  <!-- ═══════════════════ WHY ═══════════════════ -->
+  <section class="sec" id="why">
+    <div class="sec-tag">The Problem</div>
+    <p class="why-lead reveal">
+      Traditional software crashes <strong>loudly</strong> — it throws errors, pages on-call, and stops.<br>
+      AI agents fail <em>quietly</em> — they keep going, confidently making the wrong decisions,
+      leaking data, burning money, and routing the wrong patient — until someone checks the bill.
+    </p>
+    <div class="three-col reveal">
+      <div class="why-card wc-v">
+        <div class="wc-bg">01</div>
+        <div class="wc-icon">👁</div>
+        <div class="wc-tag">Visibility</div>
+        <h3 class="wc-title">You can't see it happening — so you can't stop it</h3>
+        <p class="wc-body">Node 4 fails but looks like a node 6 problem without chain tracing. Model drift accumulates
+          invisibly over months. Token costs spike overnight. Multi-agent chains fail silently. Without trace depth and
+          signal rate tuned to your system, you're debugging smoke.</p>
+        <div class="wc-stat">
+          <div class="big">90 DAYS</div>
+          <div class="lbl">Average time AI quality drift goes unnoticed without observability tooling</div>
+        </div>
+      </div>
+      <div class="why-card wc-s">
+        <div class="wc-bg">02</div>
+        <div class="wc-icon">🛡</div>
+        <div class="wc-tag">Safety</div>
+        <h3 class="wc-title">One uncaught fault cascades into a catastrophe</h3>
+        <p class="wc-body">A null-check miss at node 3 routes the wrong patient. An uncaught exception in a financial
+          bot sends a bad trade. A 3× latency anomaly in a prompt node becomes $4,200 per day in token costs — detected
+          72 hours and $12,600 too late. SEC requires full decision trails.</p>
+        <div class="wc-stat">
+          <div class="big">$4,200</div>
+          <div class="lbl">Per day from a single undetected prompt loop — found in the billing dashboard</div>
+        </div>
+      </div>
+      <div class="why-card wc-p">
+        <div class="wc-bg">03</div>
+        <div class="wc-icon">🔒</div>
+        <div class="wc-tag">Privacy</div>
+        <h3 class="wc-title">Every log line is a potential breach vector</h3>
+        <p class="wc-body">PII leaks into nodeId fields. API keys appear in errorType. The constructor injection
+          vulnerability bypasses allowlists. Datadog and Splunk ingest everything — including what you forgot to strip.
+          GDPR doesn't care that it was a debug line.</p>
+        <div class="wc-stat">
+          <div class="big">$2.4M</div>
+          <div class="lbl">GDPR fine from a single email address logged in a nodeId field, caught 8 months later</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ INCIDENTS ═══════════════════ -->
+  <section class="sec" id="incidents">
+    <div class="sec-tag">Documented Incidents</div>
+    <div class="inc-top">
+      <h2 class="inc-h reveal">These aren't<br>hypotheticals.</h2>
+      <p class="inc-note reveal">Every one is a real production failure mode Veilpiercer's 3 pillars directly prevent.
+      </p>
+    </div>
+    <table class="inc-table reveal">
+      <thead>
+        <tr>
+          <th>Real Cost</th>
+          <th>Incident</th>
+          <th>What happened</th>
+          <th style="text-align:right">Prevented By</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-cost" style="color:var(--vis)">$4,200<span style="font-size:11px;color:var(--t2)">/day</span>
+          </td>
+          <td class="td-name">The Invisible Token Burn</td>
+          <td class="td-desc">A prompt loop triggered infinite retry. No anomaly detection. Discovered in billing 72
+            hours and $12,600 later.</td>
+          <td class="td-pill"><span class="inc-pill" style="color:var(--vis);border-color:var(--vis)">VISIBILITY ·
+              ANOMALY Δ</span></td>
+        </tr>
+        <tr>
+          <td class="td-cost" style="color:var(--priv)">$2.4M</td>
+          <td class="td-name">The GDPR Log Audit Failure</td>
+          <td class="td-desc">Developer used a user email as nodeId for debugging. It shipped. Datadog ingested it. EU
+            audit found it 8 months later.</td>
+          <td class="td-pill"><span class="inc-pill" style="color:var(--priv);border-color:var(--priv)">PRIVACY · GATE ·
+              REDACT</span></td>
+        </tr>
+        <tr>
+          <td class="td-cost" style="color:var(--saf)">Patient</td>
+          <td class="td-name">Healthcare Routing Null-Check</td>
+          <td class="td-desc">Malformed input at node 3. No catch gate. Null propagated silently. Wrong department.
+            Found in a manual chart review — not monitoring.</td>
+          <td class="td-pill"><span class="inc-pill" style="color:var(--saf);border-color:var(--saf)">SAFETY · CATCH ·
+              HEAL</span></td>
+        </tr>
+        <tr>
+          <td class="td-cost" style="color:var(--warn)">3–5×</td>
+          <td class="td-name">The AI Support Drift Nobody Saw</td>
+          <td class="td-desc">Customer support agent quality degraded 3–5× over 90 days. No output key tracking.
+            Discovered through a 2-star drop in satisfaction scores.</td>
+          <td class="td-pill"><span class="inc-pill" style="color:var(--warn);border-color:var(--warn)">VISIBILITY ·
+              DRIFT NODE</span></td>
+        </tr>
+        <tr>
+          <td class="td-cost" style="color:var(--red)">SEC</td>
+          <td class="td-name">The Missing Financial Agent Trail</td>
+          <td class="td-desc">Robo-advisor made 847 trades over 6 weeks. SEC requested full decision trail. No
+            chain-level logging. Compliance failure. Investigation launched.</td>
+          <td class="td-pill"><span class="inc-pill" style="color:var(--red);border-color:var(--red)">VISIBILITY · TRACE
+              DEPTH</span></td>
+        </tr>
+        <tr>
+          <td class="td-cost" style="color:var(--priv)">0-day</td>
+          <td class="td-name">Constructor Injection Attack</td>
+          <td class="td-desc">Attacker passed `constructor` as field name to bypass safeLog allowlist. The `in` operator
+            traversed prototype chain. We patched it with hasOwnProperty.</td>
+          <td class="td-pill"><span class="inc-pill" style="color:var(--priv);border-color:var(--priv)">PRIVACY · PROTO
+              SHIELD</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ═══════════════════ AGENT FLOW OBSERVATORY ═══════════════════ -->
+  <section id="observatory">
+    <div class="obs-header reveal">
+      <div class="sec-tag">Live Demo</div>
+      <h2
+        style="font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(32px,5vw,64px);letter-spacing:-2px;line-height:.95;margin-bottom:12px;">
+        AGENT FLOW <span style="color:var(--vis)">OBSERVATORY</span>
+      </h2>
+      <p
+        style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:rgba(221,234,245,.4);margin-bottom:32px;max-width:640px;line-height:1.6;">
+        Place agents. Define the safe zone. Inject a fault. Watch what VeilPiercer sees in real time —
+        throughput collapse, survivability drop, and the exact moment the system needs intervention.
+      </p>
+    </div>
+    <div id="obs-canvas-wrap">
+      <canvas id="obs-canvas"></canvas>
+
+      <div id="obs-ui">
+        <div class="obs-title">◈ VEILPIERCER · FLOW MONITOR</div>
+        <div class="obs-metric">THROUGHPUT/sec <span id="obs-cap">0</span></div>
+        <div class="obs-metric">SUCCESS RATE <span id="obs-surv" style="color:var(--saf)">100%</span></div>
+        <div class="obs-metric">ACTIVE AGENTS <span id="obs-count">0</span></div>
+        <div id="obs-alert">VEILPIERCER: Awaiting agent deployment.</div>
+      </div>
+
+      <div class="obs-controls">
+        <button class="obs-btn" onclick="obsMode='source'">▶ SPAWN AGENTS</button>
+        <button class="obs-btn safe" onclick="obsMode='sink'">◎ SET SAFE ZONE</button>
+        <button class="obs-btn danger" onclick="obsMode='fire'">⚡ INJECT FAULT</button>
+        <button class="obs-btn" onclick="obsReset()" style="color:var(--t2);border-color:var(--rim2)">↺ RESET</button>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ── AGENT FLOW OBSERVATORY ────────────────────────────────────────────────
+    (function () {
+      const canvas = document.getElementById('obs-canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      let w, h, agents = [], obsMode = 'source', spawnPoint = null, exitPoint = null, frame = 0;
+      let totalSaved = 0, totalLost = 0;
+
+      function obsInit() {
+        const wrap = document.getElementById('obs-canvas-wrap');
+        w = canvas.width = wrap.clientWidth;
+        h = canvas.height = wrap.clientHeight;
+        ctx.fillStyle = '#020205';
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      function obsReset() {
+        agents = []; spawnPoint = null; exitPoint = null;
+        totalSaved = 0; totalLost = 0; frame = 0;
+        obsInit();
+        document.getElementById('obs-cap').textContent = '0';
+        document.getElementById('obs-surv').textContent = '100%';
+        document.getElementById('obs-count').textContent = '0';
+        const alert = document.getElementById('obs-alert');
+        alert.textContent = 'VEILPIERCER: System reset. Awaiting agent deployment.';
+        alert.className = '';
+      }
+      window.obsReset = obsReset;
+      window.obsMode = 'source';
+      Object.defineProperty(window, 'obsMode', {
+        get: () => obsMode,
+        set: (v) => { obsMode = v; }
+      });
+
+      function look(agent, ang) {
+        const px = agent.x + Math.cos(ang) * 20;
+        const py = agent.y + Math.sin(ang) * 20;
+        if (px < 0 || px > w || py < 0 || py > h) return -1;
+        const d = ctx.getImageData(px | 0, py | 0, 1, 1).data;
+        if (d[0] > 180 && d[1] < 100) return -2; // fault zone (red)
+        if (d[0] > 100 && d[1] > 100 && d[2] > 100) return -1; // wall (white)
+        return d[1] + d[2];
+      }
+
+      function obsLoop() {
+        // trail fade
+        ctx.fillStyle = 'rgba(2, 2, 5, 0.09)';
+        ctx.fillRect(0, 0, w, h);
+
+        // spawn
+        if (spawnPoint && agents.length < 3200) {
+          for (let i = 0; i < 5; i++) {
+            agents.push({ x: spawnPoint.x, y: spawnPoint.y, a: Math.random() * 6.28, hp: 100 });
+          }
+        }
+
+        let saved = 0, lost = 0;
+
+        for (let i = agents.length - 1; i >= 0; i--) {
+          const ag = agents[i];
+          const vC = look(ag, ag.a);
+          const vL = look(ag, ag.a - 0.5);
+          const vR = look(ag, ag.a + 0.5);
+
+          if (vC === -1 || vC === -2) {
+            ag.a += 1.5;
+            if (vC === -2) ag.hp -= 4;
+          } else {
+            if (vL > vR) ag.a -= 0.12;
+            else if (vR > vL) ag.a += 0.12;
+          }
+
+          if (exitPoint) ag.a += Math.atan2(exitPoint.y - ag.y, exitPoint.x - ag.x) * 0.03;
+
+          ag.x += Math.cos(ag.a) * 2.8;
+          ag.y += Math.sin(ag.a) * 2.8;
+
+          if (ag.hp <= 0) { agents.splice(i, 1); lost++; totalLost++; continue; }
+
+          // color by health: cyan → orange → red
+          const hp = ag.hp / 100;
+          const r = Math.round((1 - hp) * 255);
+          const g = Math.round(hp * 200);
+          ctx.fillStyle = `rgba(${r}, ${g}, ${hp > 0.6 ? 242 : 80}, 0.55)`;
+          ctx.fillRect(ag.x, ag.y, 1.5, 1.5);
+
+          if (exitPoint && Math.hypot(exitPoint.x - ag.x, exitPoint.y - ag.y) < 22) {
+            agents.splice(i, 1); saved++; totalSaved++;
+          }
+        }
+
+        // draw spawn beacon
+        if (spawnPoint) {
+          ctx.strokeStyle = 'rgba(0, 229, 255, 0.5)';
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(spawnPoint.x, spawnPoint.y, 14 + Math.sin(frame * 0.1) * 4, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // draw exit beacon
+        if (exitPoint) {
+          ctx.strokeStyle = 'rgba(0, 255, 136, 0.6)';
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(exitPoint.x, exitPoint.y, 18 + Math.sin(frame * 0.08) * 5, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.fillStyle = 'rgba(0, 255, 136, 0.12)';
+          ctx.beginPath();
+          ctx.arc(exitPoint.x, exitPoint.y, 22, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        // update metrics every 45 frames
+        if (frame % 45 === 0) {
+          const total = totalSaved + totalLost || 1;
+          const rate = Math.max(0, Math.round((totalSaved / total) * 100));
+          document.getElementById('obs-cap').textContent = saved;
+          document.getElementById('obs-surv').textContent = rate + '%';
+          document.getElementById('obs-count').textContent = agents.length;
+
+          const el = document.getElementById('obs-surv');
+          el.style.color = rate >= 70 ? 'var(--saf)' : (rate >= 40 ? 'var(--warn)' : 'var(--red)');
+
+          const alert = document.getElementById('obs-alert');
+          if (!spawnPoint) {
+            alert.textContent = 'VEILPIERCER: No agents deployed. Click canvas with SPAWN AGENTS active.';
+            alert.className = '';
+          } else if (rate < 40) {
+            alert.textContent = `CRITICAL: ${100 - rate}% agent loss. LOCKDOWN recommended. Fault zone compromising flow.`;
+            alert.className = '';
+          } else if (rate < 70) {
+            alert.textContent = `WARNING: Survivability at ${rate}%. Anomaly detected — consider rerouting.`;
+            alert.className = '';
+          } else {
+            alert.textContent = `VEILPIERCER: Flow nominal. ${rate}% success rate. All agents within tolerance.`;
+            alert.className = 'stable';
+          }
+        }
+
+        frame++;
+        requestAnimationFrame(obsLoop);
+      }
+
+      canvas.addEventListener('mousedown', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = w / rect.width;
+        const scaleY = h / rect.height;
+        const cx = (e.clientX - rect.left) * scaleX;
+        const cy = (e.clientY - rect.top) * scaleY;
+
+        if (obsMode === 'source') {
+          spawnPoint = { x: cx, y: cy };
+        } else if (obsMode === 'sink') {
+          exitPoint = { x: cx, y: cy };
+        } else if (obsMode === 'fire') {
+          ctx.fillStyle = '#ff2200';
+          ctx.beginPath();
+          ctx.arc(cx, cy, 28, 0, Math.PI * 2);
+          ctx.fill();
+          // outer glow
+          ctx.fillStyle = 'rgba(255, 60, 0, 0.25)';
+          ctx.beginPath();
+          ctx.arc(cx, cy, 48, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      window.addEventListener('resize', obsInit);
+      obsInit();
+      obsLoop();
+    })();
+  </script>
+
+  <!-- ═══════════════════ BUYERS ═══════════════════ -->
+  <section class="sec" id="buyers" style="background:var(--paper);color:var(--black)">
+    <div class="sec-tag" style="color:rgba(10,10,10,.3)"><span
+        style="display:inline-block;width:24px;height:1px;background:rgba(10,10,10,.3);margin-right:12px;vertical-align:middle"></span>Who
+      Buys This</div>
+    <h2 class="buyers-h reveal">Built for<br>builders.</h2>
+    <p class="buyers-sub reveal">Not a tutorial. Not a toy. A production control plane for AI systems running in the
+      real world.</p>
+    <div class="buyer-list">
+      <div class="buyer-row reveal">
+        <div class="br-num">01</div>
+        <div>
+          <div class="br-name">Dev Teams Running AI Agents in Production</div>
+          <p class="br-desc">Your multi-agent system runs at 3am without you. You have no idea if node 4 just failed
+            silently or if your token budget is burning. Veilpiercer is the live control plane — trace depth, anomaly
+            detection, auto-recovery — tunable from one screen, one command.</p>
+        </div>
+        <div class="br-right">
+          <div class="br-icon">💻</div>
+          <div class="br-proto" style="color:var(--vis);border-color:var(--vis)">AMPLIFY on deploy</div><br>
+          <div class="br-proto" style="color:var(--red);border-color:var(--red);margin-top:5px">LOCKDOWN on incident
+          </div>
+        </div>
+      </div>
+      <div class="buyer-row reveal">
+        <div class="br-num">02</div>
+        <div>
+          <div class="br-name">Compliance Officers — FinTech &amp; Healthcare</div>
+          <p class="br-desc">SEC requires full agent decision trails. HIPAA requires PII never enters logs. GDPR
+            requires redaction at the moment of write — not at the SIEM, not at the dashboard. Veilpiercer enforces all
+            three simultaneously with a single command.</p>
+        </div>
+        <div class="br-right">
+          <div class="br-icon">⚖️</div>
+          <div class="br-proto" style="color:var(--priv);border-color:var(--priv)">SELECTIVE always</div><br>
+          <div class="br-proto" style="color:var(--red);border-color:var(--red);margin-top:5px">LOCKDOWN before audits
+          </div>
+        </div>
+      </div>
+      <div class="buyer-row reveal">
+        <div class="br-num">03</div>
+        <div>
+          <div class="br-name">AI Creators Selling Automation to Agencies</div>
+          <p class="br-desc">Your clients ask "how do I know your automation is actually working?" Veilpiercer is your
+            answer — and your recurring upsell. White-label it, bundle it, or sell it standalone. Turn a one-time
+            project into a managed service with monthly revenue.</p>
+        </div>
+        <div class="br-right">
+          <div class="br-icon">🚀</div>
+          <div class="br-proto" style="color:var(--saf);border-color:var(--saf)">Bundle + upsell</div><br>
+          <div class="br-proto" style="color:var(--vis);border-color:var(--vis);margin-top:5px">White-label (Agency)
+          </div>
+        </div>
+      </div>
+      <div class="buyer-row reveal">
+        <div class="br-num">04</div>
+        <div>
+          <div class="br-name">DevOps Engineers Managing CI/CD Agent Pipelines</div>
+          <p class="br-desc">Autonomous deploy agents need maximum observability during rollouts and instant lockdown
+            when anomalies spike. This is the ops console for AI-native infrastructure. AMPLIFY before merge, LOCKDOWN
+            on rollback, NOMINAL when stable.</p>
+        </div>
+        <div class="br-right">
+          <div class="br-icon">⚙️</div>
+          <div class="br-proto" style="color:var(--vis);border-color:var(--vis)">AMPLIFY on deploy</div><br>
+          <div class="br-proto" style="color:var(--red);border-color:var(--red);margin-top:5px">LOCKDOWN on rollback
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WAVE STRIP 2 -->
+  <canvas class="strip" id="strip2"></canvas>
+
+  <!-- ═══════════════════ FEATURES ═══════════════════ -->
+  <section class="sec" id="features">
+    <div class="sec-tag">Unmatched Features</div>
+    <div class="feat-intro reveal">
+      <h2 class="feat-h">Unleashing<br><span class="acc">Infinite</span><br>Possibilities.</h2>
+      <p class="feat-desc">Imagine a world where AI agents operate seamlessly across every framework, transcending
+        traditional limitations. Veilpiercer is the ultimate control layer for intelligent systems — built on 50M+
+        analyzed production failures, engineered for the era where 67% of enterprises run on AI agents.</p>
+    </div>
+    <div class="feat-grid reveal">
+      <div class="feat-card fc-vis" data-n="1">
+        <div class="fc-icon">🌐</div>
+        <div class="fc-title">Universal Agent Orchestration</div>
+        <p class="fc-body">Engage, monitor, and control any AI framework — LangChain, AutoGPT, or custom innovations.
+          One intuitive dashboard connects it all. No lock-in. No gaps.</p>
+      </div>
+      <div class="feat-card fc-vis" data-n="2">
+        <div class="fc-icon">🧠</div>
+        <div class="fc-title">Predictive Intelligence Engine</div>
+        <p class="fc-body">Advanced algorithms analyzing 50M+ production failures foresee issues before they arise.
+          Drift monitored at sub-0.3% thresholds — nothing slips under the radar.</p>
+      </div>
+      <div class="feat-card fc-saf" data-n="3">
+        <div class="fc-icon">🔄</div>
+        <div class="fc-title">Autonomous Safety Mesh</div>
+        <p class="fc-body">Self-healing circuits and intelligent kill switches that don't just stop failures — they
+          learn from them, preventing recurrence. The system evolves its own defenses.</p>
+      </div>
+      <div class="feat-card fc-priv" data-n="4">
+        <div class="fc-icon">🛡</div>
+        <div class="fc-title">Zero-Trust Privacy Architecture</div>
+        <p class="fc-body">Cutting-edge allowlist enforcement and prototype pollution prevention. Your data remains
+          untouched by unauthorized eyes at the moment of write — before it leaves your system.</p>
+      </div>
+      <div class="feat-card fc-vis" data-n="5">
+        <div class="fc-icon">🔭</div>
+        <div class="fc-title">Infinite Observability Depth</div>
+        <p class="fc-body">Dive deep into every interaction. Replay agent actions in real-time. Reverse-engineer
+          decisions. Full chain reconstruction from logs — maximum transparency.</p>
+      </div>
+      <div class="feat-card fc-saf" data-n="6">
+        <div class="fc-icon">⚡</div>
+        <div class="fc-title">Real-Time Intervention</div>
+        <p class="fc-body">Adapt and modify agent parameters live. Maintain control without downtime. Touch a node, drag
+          its power, type a command — changes propagate instantly across all 9 control nodes.</p>
+      </div>
+      <div class="feat-card fc-gold" data-n="7">
+        <div class="fc-icon">📊</div>
+        <div class="fc-title">Business Intelligence Layer</div>
+        <p class="fc-body">Connect every AI interaction to business outcomes. Translate operations into actionable
+          insights. Transform performance metrics into profit pathways — not just dashboards.</p>
+      </div>
+      <div class="feat-card fc-gold" data-n="8">
+        <div class="fc-icon">🔌</div>
+        <div class="fc-title">Future-Proof Extensibility</div>
+        <p class="fc-body">Open architecture. Create custom plugins and tools. React Flow node editor included. Expand
+          functionality to suit any emerging need — the system grows with the field.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ STAT BAND ═══════════════════ -->
+  <div id="statband">
+    <div class="statband-inner">
+      <div class="sb-item">
+        <div class="sb-n">67%</div>
+        <div class="sb-l">Enterprises on AI agents<br>by 2026 (Gartner)</div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-n">50M+</div>
+        <div class="sb-l">Production failures<br>analyzed in our model</div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-n">0.3%</div>
+        <div class="sb-l">Drift detection<br>threshold (sub-percent)</div>
+      </div>
+      <div class="sb-item">
+        <div class="sb-n">9</div>
+        <div class="sb-l">Live control nodes<br>tunable by touch</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ PROTOCOLS ═══════════════════ -->
+  <section class="sec" id="protocols" style="background:var(--paper);color:var(--black)">
+    <div class="sec-tag" style="color:rgba(10,10,10,.3)"><span
+        style="display:inline-block;width:24px;height:1px;background:rgba(10,10,10,.3);margin-right:12px;vertical-align:middle"></span>Control
+      Protocols</div>
+    <h2 class="proto-h reveal">Four modes.<br>One command.</h2>
+    <p class="proto-sub reveal">Type it, tap it, or trigger it programmatically. Every protocol sweeps all 9 nodes and
+      explains exactly what changed, why, and what it prevents.</p>
+    <div class="proto-grid reveal">
+      <div class="proto-card pc-lock" data-mode="LOCK">
+        <div class="pc-name">🔴 LOCK DOWN</div>
+        <div class="pc-trigger">type: "lock down" · tap button · call API</div>
+        <p class="pc-desc">All 9 nodes elevated to 95–100%. Maximum catch sensitivity. Full privacy enforcement.
+          Prototype shield maxed. Zero tolerance for silent failures. The system hardens itself in one sweep.</p>
+        <div class="pc-when">GDPR audit · SEC review · Healthcare compliance · Incident response · Pre-production
+          security sweep · Any moment where failure has real-world consequences</div>
+      </div>
+      <div class="proto-card pc-amp" data-mode="AMP">
+        <div class="pc-name">🟢 AMPLIFY</div>
+        <div class="pc-trigger">type: "amplify" · tap button · call API</div>
+        <p class="pc-desc">Visibility nodes maxed to 100%. Full telemetry at every evaluation. Safety and privacy
+          relaxed for throughput. You see everything — latency anomalies, output key drift, chain gaps, token burn.</p>
+        <div class="pc-when">Live deployment · Load testing · Debug session · Investigating a cost spike · Catching
+          drift early · When you need to see what's actually happening right now</div>
+      </div>
+      <div class="proto-card pc-sel" data-mode="SEL">
+        <div class="pc-name">🟡 SELECTIVE</div>
+        <div class="pc-trigger">type: "selective" · tap button · call API</div>
+        <p class="pc-desc">Privacy fully locked at 100%. Safety elevated to maximum. Visibility balanced. For production
+          agents processing real PII where privacy is non-negotiable but observability remains essential.</p>
+        <div class="pc-when">Legal document AI · Financial advice bots · Healthcare routing · Any agent touching
+          customer PII in production · HIPAA-regulated environments</div>
+      </div>
+      <div class="proto-card pc-nom" data-mode="NOM">
+        <div class="pc-name">🔵 NOMINAL</div>
+        <div class="pc-trigger">type: "nominal" or "reset" · tap button</div>
+        <p class="pc-desc">Balanced defaults across all 9 nodes. Standard operating mode. The baseline from which you
+          LOCK DOWN before an audit or AMPLIFY before a deploy — and return here when stable.</p>
+        <div class="pc-when">Standard production · Post-incident recovery · Between protocol activations · Default
+          startup state · When everything is running as designed</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ VISION ═══════════════════ -->
+  <section id="vision">
+    <canvas id="vision-canvas"></canvas>
+    <div class="vision-content">
+      <div class="vision-tag">The Universe of AI Awaits</div>
+      <h2 class="vision-h reveal">
+        <span class="dim">THE</span><br>
+        <span class="dim">FUTURE</span><br>
+        <span class="bright">STARTS</span><br>
+        <span class="dim">HERE.</span>
+      </h2>
+      <p class="vision-body reveal">
+        As AI adoption explodes — with projections showing <strong>67% of enterprises depending on intelligent agents by
+          2026</strong> — every hidden failure, every missed opportunity, every silent breach becomes an existential
+        risk.<br><br>
+        Veilpiercer is your <em>cosmic ally</em> in ensuring you're not just keeping up, but redefining the landscape.
+        Every agent failure you've read about on this page ends here. Every compliance risk. Every token burn. Every
+        silent drift.<br><br>
+        <strong>This is not just observability. This is sovereignty over your AI systems.</strong>
+      </p>
+      <div class="enterprise-stat reveal">
+        <div class="es-n">67%</div>
+        <div class="es-l">of enterprises will depend<br>on intelligent agents by 2026<br><span style="color:var(--t3)">—
+            Gartner projection</span></div>
+      </div>
+      <div class="hero-ctas reveal">
+        <a href="#pricing" class="btn-primary">Launch Your Journey</a>
+        <a href="#incidents" class="btn-ghost" style="color:var(--t2)">See the proof first →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PRICING ═══════════════════ -->
+  <section class="sec" id="pricing">
+    <div class="sec-tag">Pricing</div>
+    <h2 class="price-h reveal">Simple.<br><span class="v">Yours.</span></h2>
+    <p class="price-sub reveal">One-time access. No seats. No per-agent fees. No $400/mo SaaS bill for a dashboard you
+      built.</p>
+
+    <!-- CLAUDE ARTIFACT EMBED -->
+    <div class="reveal"
+      style="margin: 40px 0; border: 1px solid var(--rim); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+      <iframe src="https://claude.site/public/artifacts/204cd176-6a7a-435b-be1c-943f15d148d9/embed"
+        title="Claude Artifact" width="100%" height="600" frameborder="0" allow="clipboard-write"
+        allowfullscreen></iframe>
+    </div>
+
+    <div class="price-cards reveal">
+      <div class="p-card">
+        <div class="p-tier">Starter</div>
+        <div class="p-amt">$47</div>
+        <div class="p-per">one-time · lifetime access</div>
+        <ul class="p-feats">
+          <li>Full Veilpiercer dashboard</li>
+          <li>All 4 protocol modes (Lock/Amplify/Selective/Nominal)</li>
+          <li>9 tunable live nodes (drag/tap/command)</li>
+          <li>Natural language command interpreter</li>
+          <li>Source code included</li>
+        </ul>
+        <a href="https://buy.stripe.com/fZueV67fX86w7jOgUY28801" class="p-btn pb-out stripe-checkout"
+          data-tier="Starter" data-price="$47" target="_blank" rel="noopener">Get Starter →</a>
+      </div>
+      <div class="p-card feat">
+        <div class="p-badge">MOST POPULAR</div>
+        <div class="p-tier">Pro</div>
+        <div class="p-amt">$97</div>
+        <div class="p-per">one-time · lifetime access</div>
+        <ul class="p-feats">
+          <li>Everything in Starter</li>
+          <li>safeLog module (production-ready, 79 tests)</li>
+          <li>Simulation model + 6-phase stress tests</li>
+          <li>React Flow node editor component</li>
+          <li>Pino + OpenTelemetry integration guide</li>
+          <li>Prototype pollution patch (fully documented)</li>
+          <li>Use case decks for all 4 buyer types</li>
+        </ul>
+        <a href="https://buy.stripe.com/5kQ00c7fX3Qg47C48c28802" class="p-btn pb-dark stripe-checkout" data-tier="Pro"
+          data-price="$97" target="_blank" rel="noopener">Get Pro →</a>
+      </div>
+      <div class="p-card">
+        <div class="p-tier">Agency</div>
+        <div class="p-amt">$197</div>
+        <div class="p-per">one-time · white-label rights</div>
+        <ul class="p-feats">
+          <li>Everything in Pro</li>
+          <li>White-label + full rebrand rights</li>
+          <li>Client-facing pitch deck + use cases</li>
+          <li>Resell or bundle with your services</li>
+          <li>Priority support channel</li>
+          <li>Future updates included</li>
+        </ul>
+        <a href="https://buy.stripe.com/eVq6oAdElgD2aw0dIM28803" class="p-btn pb-out stripe-checkout" data-tier="Agency"
+          data-price="$197" target="_blank" rel="noopener">Get Agency →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+  <section id="footer">
+    <h2 class="footer-q reveal">
+      Your agents are running right now.<br>
+      <em>Are you watching?</em>
+    </h2>
+    <p class="footer-note reveal">
+      Every minute without observability is a minute a node could be failing silently,
+      leaking PII into a log that Datadog ingests, or burning through your token budget
+      while you sleep. <strong>Every hidden failure ends here.</strong>
+    </p>
+    <div class="footer-btns reveal">
+      <a href="#pricing" class="btn-dark">Get Veilpiercer Now</a>
+      <p class="footer-legal">One-time purchase. Source code included. No subscriptions. Begin with confidence — the
+        platform built not just for today's challenges, but for tomorrow's infinite possibilities.</p>
+    </div>
+  </section>
+
+  <script>
+    // ══ CURSOR ══════════════════════════════════════
+    const cur = document.getElementById('cur'), ring = document.getElementById('cur-r');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cur.style.left = mx + 'px'; cur.style.top = my + 'px';
+    });
+    (function a() {
+      rx += (mx - rx) * .12; ry += (my - ry) * .12;
+      ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(a);
+    })();
+    document.querySelectorAll('a,button,.buyer-row,.why-card,.feat-card,.proto-card,.p-card,.sb-item').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cur.style.transform = 'translate(-50%,-50%) scale(2.2)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1.6)';
+        ring.style.borderColor = 'rgba(0,229,255,.6)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cur.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.borderColor = 'rgba(0,229,255,.35)';
+      });
+    });
+
+    // ══ SCROLL REVEAL ════════════════════════════════
+    const obs = new IntersectionObserver(e => e.forEach(x => {
+      if (x.isIntersecting) { x.target.classList.add('in'); obs.unobserve(x.target); }
+    }), { threshold: .07 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+    // ══ HERO CANVAS — orbital node cluster ═══════════
+    (function () {
+      const c = document.getElementById('hero-canvas'), x = c.getContext('2d');
+      function sz() { c.width = c.parentElement.clientWidth; c.height = c.parentElement.clientHeight; }
+      sz(); window.addEventListener('resize', sz);
+      const NODES = [
+        { l: 'TRACE', col: '#00e5ff', ang: 0, r: .28, sp: .0006, pw: .78 },
+        { l: 'SIGNAL', col: '#00aaff', ang: 2.1, r: .28, sp: -.0005, pw: .65 },
+        { l: 'DRIFT', col: '#0077ff', ang: 4.2, r: .28, sp: .0007, pw: .70 },
+        { l: 'CATCH', col: '#00ff88', ang: .7, r: .22, sp: -.0005, pw: .82 },
+        { l: 'HEAL', col: '#00dd66', ang: 2.8, r: .22, sp: .0008, pw: .60 },
+        { l: 'ANOMALY', col: '#88ff44', ang: 4.9, r: .22, sp: -.0007, pw: .72 },
+        { l: 'GATE', col: '#c84dff', ang: 1.4, r: .17, sp: .0005, pw: .88 },
+        { l: 'REDACT', col: '#9922ff', ang: 3.5, r: .17, sp: -.0006, pw: .91 },
+        { l: 'SHIELD', col: '#6600cc', ang: 5.6, r: .17, sp: .0004, pw: 1.0 },
+      ];
+      const pts = [];
+      function sp(nd, cx, cy) {
+        const a = Math.random() * Math.PI * 2, s = .6 + Math.random() * 1.4;
+        pts.push({ x: nd.px, y: nd.py, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1, dec: .025 + Math.random() * .02, col: nd.col, sz: 1.2 + Math.random() * 1.8 });
+      }
+      let t = 0;
+      function draw() {
+        t++;
+        const W = c.width, H = c.height, cx = W * .62, cy = H * .52;
+        const br = Math.min(W, H) * .32;
+        x.clearRect(0, 0, W, H);
+        // Central hub glow
+        const g = x.createRadialGradient(cx, cy, 0, cx, cy, br * .8);
+        g.addColorStop(0, 'rgba(0,229,255,.07)'); g.addColorStop(1, 'transparent');
+        x.fillStyle = g; x.fillRect(0, 0, W, H);
+        // Hub
+        x.beginPath(); x.arc(cx, cy, 20, 0, Math.PI * 2);
+        x.fillStyle = 'rgba(0,229,255,.08)'; x.fill();
+        x.strokeStyle = 'rgba(0,229,255,.35)'; x.lineWidth = 1.5; x.stroke();
+        x.font = 'bold 9px "Fira Code"'; x.fillStyle = 'rgba(0,229,255,.5)';
+        x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('VP', cx, cy);
+
+        NODES.forEach(nd => {
+          nd.ang += nd.sp;
+          const r = br * nd.r;
+          nd.px = cx + Math.cos(nd.ang) * r; nd.py = cy + Math.sin(nd.ang) * r;
+          // Edge
+          x.beginPath(); x.moveTo(cx, cy); x.lineTo(nd.px, nd.py);
+          x.strokeStyle = nd.col + '15'; x.lineWidth = 1; x.setLineDash([2, 8]); x.stroke(); x.setLineDash([]);
+          // Power arc
+          const R = 20;
+          x.beginPath(); x.arc(nd.px, nd.py, R + 4, -Math.PI / 2, -Math.PI / 2 + nd.pw * Math.PI * 2);
+          x.strokeStyle = nd.col; x.lineWidth = 4; x.lineCap = 'round';
+          x.shadowColor = nd.col; x.shadowBlur = 10; x.stroke(); x.shadowBlur = 0; x.lineCap = 'butt';
+          // Body
+          const bg = x.createRadialGradient(nd.px, nd.py, 0, nd.px, nd.py, R);
+          bg.addColorStop(0, '#0d1e30'); bg.addColorStop(1, '#030810');
+          x.beginPath(); x.arc(nd.px, nd.py, R, 0, Math.PI * 2);
+          x.fillStyle = bg; x.fill(); x.strokeStyle = nd.col + '44'; x.lineWidth = 1.5; x.stroke();
+          // Label
+          x.font = '7px "Fira Code"'; x.fillStyle = nd.col + 'bb';
+          x.textAlign = 'center'; x.textBaseline = 'middle';
+          x.fillText(nd.l, nd.px, nd.py);
+          if (Math.random() < .04) sp(nd, cx, cy);
+        });
+        // Particles
+        for (let i = pts.length - 1; i >= 0; i--) {
+          const p = pts[i]; p.x += p.vx; p.y += p.vy; p.life -= p.dec;
+          if (p.life <= 0) { pts.splice(i, 1); continue; }
+          x.beginPath(); x.arc(p.x, p.y, p.sz * p.life, 0, Math.PI * 2);
+          x.fillStyle = p.col + Math.round(p.life * 140).toString(16).padStart(2, '0'); x.fill();
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ══ WAVE STRIP 1 ═════════════════════════════════
+    (function () {
+      const c = document.getElementById('strip1'), x = c.getContext('2d');
+      function sz() { c.width = window.innerWidth; c.height = 90; } sz();
+      window.addEventListener('resize', sz);
+      const streams = [
+        { col: '#00e5ff', ph: 0, sp: .018, fr: .024, am: .38 },
+        { col: '#00ff88', ph: 2.1, sp: .024, fr: .034, am: .30 },
+        { col: '#c84dff', ph: 4.2, sp: .016, fr: .028, am: .34 },
+      ];
+      let t = 0;
+      function draw() {
+        t++; x.fillStyle = '#080c10'; x.fillRect(0, 0, c.width, c.height);
+        streams.forEach((s, si) => {
+          x.beginPath();
+          for (let px = 0; px < c.width; px++) {
+            const spk = Math.random() < .003 ? (Math.random() * .5 + .3) : 0;
+            const py = 45 + Math.sin(px * s.fr + t * s.sp + s.ph) * 45 * s.am + spk * 22;
+            px === 0 ? x.moveTo(px, py) : x.lineTo(px, py);
+          }
+          x.strokeStyle = s.col + (si === 1 ? 'cc' : '77'); x.lineWidth = si === 1 ? 2 : 1.5; x.stroke();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ══ WAVE STRIP 2 ═════════════════════════════════
+    (function () {
+      const c = document.getElementById('strip2'), x = c.getContext('2d');
+      function sz() { c.width = window.innerWidth; c.height = 90; } sz();
+      window.addEventListener('resize', sz);
+      const pts = Array.from({ length: 80 }, () => ({
+        x: Math.random() * window.innerWidth, y: Math.random() * 90,
+        sp: 1 + Math.random() * 3, col: ['#00e5ff', '#00ff88', '#c84dff'][Math.floor(Math.random() * 3)],
+        sz: Math.random() * 1.8 + .4, trail: [],
+      }));
+      function draw() {
+        x.fillStyle = 'rgba(8,12,16,.35)'; x.fillRect(0, 0, c.width, c.height);
+        pts.forEach(p => {
+          p.trail.unshift({ x: p.x, y: p.y }); if (p.trail.length > 10) p.trail.pop();
+          p.x += p.sp; if (p.x > c.width + 20) p.x = -20;
+          p.trail.forEach((pt, i) => {
+            const a = 1 - i / p.trail.length;
+            x.beginPath(); x.arc(pt.x, pt.y, p.sz * a, 0, Math.PI * 2);
+            x.fillStyle = p.col + Math.round(a * 160).toString(16).padStart(2, '0'); x.fill();
+          });
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ══ VISION CANVAS — deep space ════════════════════
+    (function () {
+      const c = document.getElementById('vision-canvas'), x = c.getContext('2d');
+      function sz() { c.width = c.parentElement.clientWidth; c.height = c.parentElement.clientHeight; }
+      sz(); window.addEventListener('resize', sz);
+      const stars = Array.from({ length: 300 }, () => ({
+        x: Math.random(), y: Math.random(), r: Math.random() * 1.3 + .2,
+        ph: Math.random() * Math.PI * 2, sp: .0008 + Math.random() * .002,
+      }));
+      let t = 0;
+      function draw() {
+        t++; x.fillStyle = 'rgba(4,6,8,.25)'; x.fillRect(0, 0, c.width, c.height);
+        stars.forEach(s => {
+          const a = (Math.sin(s.ph + t * s.sp) * .35 + .55) * .6;
+          x.beginPath(); x.arc(s.x * c.width, s.y * c.height, s.r, 0, Math.PI * 2);
+          x.fillStyle = `rgba(160,210,240,${a})`; x.fill();
+        });
+        requestAnimationFrame(draw);
+      }
+      draw();
+    })();
+
+    // ══ PARALLAX ═════════════════════════════════════
+    window.addEventListener('scroll', () => {
+      const s = window.scrollY;
+      document.querySelectorAll('.hero-h1').forEach(el => {
+        el.style.transform = 'translateY(' + s * .08 + 'px)';
+      });
+    });
+
+    // ══════════════════════════════════════════════════
+    //  NEXUS ULTRA BACKEND CONNECTION LAYER
+    //  Live connection to http://127.0.0.1:3000
+    // ══════════════════════════════════════════════════
+    const NX = {
+      base: 'http://127.0.0.1:3000',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': 'Burton' },
+      async get(path) {
+        try {
+          const r = await fetch(this.base + path, { signal: AbortSignal.timeout(4000) });
+          return r.json();
+        } catch (e) { return { ok: false, error: e.message }; }
+      },
+      async post(path, body) {
+        try {
+          const r = await fetch(this.base + path, {
+            method: 'POST', headers: this.headers,
+            body: JSON.stringify(body), signal: AbortSignal.timeout(8000)
+          });
+          return r.json();
+        } catch (e) { return { ok: false, error: e.message }; }
+      }
+    };
+
+    // ── STATUS BAR ────────────────────────────────────
+    const statusBar = document.createElement('div');
+    statusBar.id = 'nx-status-bar';
+    statusBar.innerHTML = `
+  <div id="nx-sb-inner">
+    <span id="nx-dot" class="nx-dot nx-dot--connecting"></span>
+    <span id="nx-status-txt">Connecting to NEXUS ULTRA…</span>
+    <span class="nx-sep">·</span>
+    <span id="nx-uptime">—</span>
+    <span class="nx-sep">·</span>
+    <span id="nx-cap-count">Captures: —</span>
+    <span class="nx-sep">·</span>
+    <span id="nx-jobs-count">Jobs: —</span>
+    <button id="nx-log-toggle">⌨ LIVE LOG</button>
+  </div>`;
+    document.body.prepend(statusBar);
+
+    // ── STYLES ────────────────────────────────────────
+    const nxStyle = document.createElement('style');
+    nxStyle.textContent = `
+  #nx-status-bar{position:fixed;top:0;left:0;right:0;z-index:10000;
+    background:rgba(4,6,8,.97);border-bottom:1px solid #0a1f2e;
+    font-family:'Fira Code',monospace;font-size:9px;
+    letter-spacing:1.5px;text-transform:uppercase;
+    color:rgba(0,229,255,.55);height:24px;}
+  #nx-sb-inner{display:flex;align-items:center;gap:10px;padding:0 20px;height:100%;}
+  .nx-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;transition:background .4s;}
+  .nx-dot--connecting{background:#ff9500;animation:nxp .9s infinite;}
+  .nx-dot--online{background:#00ff88;animation:nxp 2.2s infinite;}
+  .nx-dot--offline{background:#ff1f3d;}
+  @keyframes nxp{0%,100%{opacity:1}50%{opacity:.3}}
+  #nx-uptime{color:rgba(0,229,255,.35);}
+  .nx-sep{color:#0a1f2e;}
+  #nx-log-toggle{margin-left:auto;background:none;border:1px solid rgba(0,229,255,.2);
+    color:rgba(0,229,255,.5);font-family:inherit;font-size:8px;
+    letter-spacing:1.5px;padding:3px 8px;cursor:pointer;transition:all .2s;}
+  #nx-log-toggle:hover{border-color:#00e5ff;color:#00e5ff;}
+  #nav{top:24px!important;}
+
+  #nx-log-console{position:fixed;bottom:24px;right:24px;z-index:9990;
+    width:420px;background:rgba(4,6,8,.97);
+    border:1px solid rgba(0,229,255,.15);backdrop-filter:blur(20px);
+    font-family:'Fira Code',monospace;font-size:10px;
+    display:none;flex-direction:column;
+    box-shadow:0 0 40px rgba(0,229,255,.06);}
+  #nx-log-console.open{display:flex;}
+  #nx-log-header{display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px;border-bottom:1px solid rgba(0,229,255,.1);
+    font-size:8px;letter-spacing:2px;color:#00e5ff;}
+  #nx-log-header button{background:none;border:none;color:rgba(0,229,255,.4);
+    font-size:14px;cursor:pointer;padding:0;transition:color .15s;}
+  #nx-log-header button:hover{color:#ff1f3d;}
+  #nx-log-body{padding:10px 14px;max-height:260px;overflow-y:auto;
+    color:rgba(221,234,245,.45);line-height:1.8;}
+  #nx-log-body::-webkit-scrollbar{width:3px;}
+  #nx-log-body::-webkit-scrollbar-thumb{background:rgba(0,229,255,.2);}
+  .nx-log-line{padding:2px 0;}
+  .nx-log-ts{color:rgba(0,229,255,.3);margin-right:6px;}
+  .nx-err{color:#ff1f3d!important;}
+  .nx-ok{color:#00ff88!important;}
+  #nx-log-footer{padding:8px 14px;border-top:1px solid rgba(0,229,255,.08);
+    font-size:8px;letter-spacing:1px;color:rgba(0,229,255,.25);}
+
+  .proto-card{cursor:pointer!important;}
+  .nx-proto-btn{display:block;margin-top:14px;font-family:'Fira Code',monospace;
+    font-size:8px;letter-spacing:2px;text-transform:uppercase;
+    padding:7px 14px;border:1px solid;cursor:pointer;background:none;
+    transition:all .15s;width:100%;text-align:center;}
+  .pc-lock .nx-proto-btn{color:var(--red);border-color:var(--red);}
+  .pc-amp  .nx-proto-btn{color:#00cc66;border-color:#00cc66;}
+  .pc-sel  .nx-proto-btn{color:var(--warn);border-color:var(--warn);}
+  .pc-nom  .nx-proto-btn{color:#0099bb;border-color:#0099bb;}
+  .nx-proto-btn:hover{background:rgba(255,255,255,.04);}
+  .nx-proto-btn.nx-running{opacity:.55;pointer-events:none;}
+  .nx-proto-btn.nx-success{color:#00ff88!important;border-color:#00ff88!important;}
+  .nx-proto-btn.nx-fail{color:#ff1f3d!important;border-color:#ff1f3d!important;}
+
+  #nx-toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
+    background:#00ff88;color:#040608;font-family:'Fira Code',monospace;
+    font-size:10px;letter-spacing:2px;padding:10px 22px;
+    z-index:99999;opacity:0;transition:opacity .25s;pointer-events:none;}
+  #nx-toast.show{opacity:1;}
+  #nx-toast.nx-err{background:#ff1f3d;color:#fff;}
+`;
+    document.head.appendChild(nxStyle);
+
+    // ── LIVE LOG CONSOLE ──────────────────────────────
+    const logConsole = document.createElement('div');
+    logConsole.id = 'nx-log-console';
+    logConsole.innerHTML = `
+  <div id="nx-log-header">
+    <span>⌨ NEXUS ULTRA — LIVE LOG</span>
+    <button id="nx-log-close">✕</button>
+  </div>
+  <div id="nx-log-body"><span style="color:rgba(0,229,255,.3)">Loading…</span></div>
+  <div id="nx-log-footer"><span id="nx-log-meta">— lines</span></div>`;
+    document.body.appendChild(logConsole);
+
+    const toast = document.createElement('div');
+    toast.id = 'nx-toast';
+    document.body.appendChild(toast);
+
+    function showToast(msg, err) {
+      toast.textContent = msg;
+      toast.className = 'show' + (err ? ' nx-err' : '');
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(() => { toast.className = ''; }, 3200);
+    }
+
+    document.getElementById('nx-log-toggle').addEventListener('click', () => {
+      logConsole.classList.toggle('open');
+    });
+    document.getElementById('nx-log-close').addEventListener('click', () => {
+      logConsole.classList.remove('open');
+    });
+
+    function renderLogs(data) {
+      if (!data.ok) return;
+      const body = document.getElementById('nx-log-body');
+      const lines = (data.lines || []).slice(-8).reverse();
+      if (!lines.length) { body.innerHTML = '<span style="color:rgba(0,229,255,.2)">No log entries yet.</span>'; return; }
+      body.innerHTML = lines.map(l => {
+        const ts = (l.match(/^\[([^\]]+)\]/) || [])[1] || '';
+        const msg = l.replace(/^\[[^\]]+\]\s*/, '');
+        const cls = /err|fail/i.test(msg) ? 'nx-err' : /OK|ONLINE|ACTIVE/i.test(msg) ? 'nx-ok' : '';
+        return `<div class="nx-log-line ${cls}"><span class="nx-log-ts">${ts.slice(11, 19)}</span>${msg}</div>`;
+      }).join('');
+      document.getElementById('nx-log-meta').textContent = `${data.total || 0} total lines`;
+    }
+
+    // ── POLLING ───────────────────────────────────────
+    async function pollStatus() {
+      const d = await NX.get('/status');
+      const dot = document.getElementById('nx-dot');
+      const txt = document.getElementById('nx-status-txt');
+      if (d.ok) {
+        dot.className = 'nx-dot nx-dot--online';
+        txt.textContent = 'NEXUS ULTRA ONLINE';
+        txt.style.color = '#00ff88';
+        document.getElementById('nx-uptime').textContent = 'UP ' + d.uptime;
+        document.getElementById('nx-cap-count').textContent = 'Captures: ' + d.captures;
+        document.getElementById('nx-jobs-count').textContent = 'Jobs: ' + d.scheduled_jobs;
+      } else {
+        dot.className = 'nx-dot nx-dot--offline';
+        txt.textContent = 'NEXUS OFFLINE';
+        txt.style.color = '#ff1f3d';
+      }
+    }
+
+    async function pollLogs() {
+      renderLogs(await NX.get('/logs?lines=20'));
+    }
+
+    (async function startPolling() {
+      await pollStatus(); await pollLogs();
+      setInterval(async () => { await pollStatus(); await pollLogs(); }, 5000);
+    })();
+
+    // ── PROTOCOL CARD BUTTONS ─────────────────────────
+    [
+      { cls: 'pc-lock', label: '⬛ ACTIVATE LOCK DOWN', mode: 'LOCK DOWN' },
+      { cls: 'pc-amp', label: '🟢 ACTIVATE AMPLIFY', mode: 'AMPLIFY' },
+      { cls: 'pc-sel', label: '🟡 ACTIVATE SELECTIVE', mode: 'SELECTIVE' },
+      { cls: 'pc-nom', label: '🔵 ACTIVATE NOMINAL', mode: 'NOMINAL' },
+    ].forEach(({ cls, label, mode }) => {
+      const card = document.querySelector('.' + cls);
+      if (!card) return;
+      const btn = document.createElement('button');
+      btn.className = 'nx-proto-btn';
+      btn.textContent = label;
+      card.appendChild(btn);
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        btn.textContent = '⟳ Activating…'; btn.classList.add('nx-running');
+        const res = await NX.post('/run', { action: 'force-stabilize' });
+        btn.classList.remove('nx-running');
+        if (res.ok) {
+          btn.textContent = '✓ ' + mode + ' Applied';
+          btn.classList.add('nx-success');
+          showToast(mode + ' protocol activated via NEXUS');
+        } else {
+          btn.textContent = '✕ Server error';
+          btn.classList.add('nx-fail');
+          showToast('NEXUS: ' + (res.error || 'unknown error'), true);
+        }
+        setTimeout(() => { btn.textContent = label; btn.className = 'nx-proto-btn'; }, 3500);
+        await pollLogs();
+      });
+    });
+
+    // ── CTA / PRICING BUTTONS ─────────────────────────
+    // Hero / footer CTA buttons — scroll to pricing, log async (non-blocking)
+    document.querySelectorAll('.btn-primary, .btn-dark').forEach(el => {
+      if (!el.href || el.href.includes('#')) {
+        el.addEventListener('click', (e) => {
+          // Allow default anchor behaviour (smooth scroll), fire log async
+          NX.post('/capture', { event: 'cta_click', label: el.textContent.trim() }).catch(() => { });
+          showToast('NEXUS: CTA click captured');
+        });
+      } else {
+        el.addEventListener('click', () => {
+          NX.post('/capture', { event: 'cta_click', label: el.textContent.trim() }).catch(() => { });
+        });
+      }
+    });
+
+    // ── STRIPE PAYMENT BUTTONS — open link, log async ──
+    document.querySelectorAll('.p-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Do NOT preventDefault — let the href open Stripe
+        const card = btn.closest('.p-card');
+        const tier = card?.querySelector('.p-tier')?.textContent?.trim() || 'Unknown';
+        const amt = card?.querySelector('.p-amt')?.textContent?.trim() || '';
+        // Fire NEXUS log async — non-blocking
+        NX.post('/capture', { event: 'stripe_checkout', tier, amt }).catch(() => { });
+        NX.post('/tabs', {
+          edge_all_open_tabs: [{ url: window.location.href, title: 'VeilPiercer ' + tier + ' ' + amt, active: true }]
+        }).catch(() => { });
+        showToast('Opening Stripe for ' + tier + ' ' + amt + ' …');
+      });
+    });
+
+    // ── AUTO-REGISTER TAB ON LOAD ─────────────────────
+    window.addEventListener('load', () => {
+      NX.post('/tabs', {
+        edge_all_open_tabs: [{ url: window.location.href, title: document.title, active: true }]
+      });
+    });
+  </script>
+
+  <!-- ═══ ANALYTICS: CLICK + SCROLL + TIME TRACKING ═══ -->
+  <script>
+    function trackEvent(name, props) {
+      if (typeof gtag !== 'undefined') gtag('event', name, props);
+      if (window.NX) NX.post('/capture', { event: name, ...props }).catch(() => { });
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      // Stripe buttons: purely track — do NOT preventDefault (links must open)
+      document.querySelectorAll('.p-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = btn.closest('.p-card');
+          const tier = card?.querySelector('.p-tier')?.textContent?.trim() || 'Unknown';
+          const price = card?.querySelector('.p-amt')?.textContent?.trim() || '';
+          trackEvent('checkout_click', { tier, price });
+        });
+      });
+      // CTA scroll buttons — track only, allow default scroll behaviour
+      document.querySelectorAll('.btn-primary, .btn-dark, .n-cta').forEach(btn => {
+        btn.addEventListener('click', () => trackEvent('cta_click', { location: btn.closest('section')?.id || 'nav' }));
+      });
+      // Scroll depth tracking
+      const depths = [25, 50, 75, 90]; const fired = new Set();
+      window.addEventListener('scroll', () => {
+        const pct = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+        depths.forEach(d => { if (pct >= d && !fired.has(d)) { fired.add(d); trackEvent('scroll_depth', { depth: d + '%' }); } });
+      }, { passive: true });
+      const startTime = Date.now();
+      window.addEventListener('beforeunload', () => trackEvent('time_on_page', { seconds: Math.round((Date.now() - startTime) / 1000) }));
+    });
+  </script>
+
+  <!-- ═══ EARLY ACCESS COUPON BANNER ═══ -->
+  <style>
+    #ea-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(90deg, #ff1f3d, #cc0022);
+      color: #fff;
+      padding: 14px 48px 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      z-index: 9999;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1px;
+      flex-wrap: wrap;
+      animation: slideUp .4s ease
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(100%)
+      }
+
+      to {
+        transform: translateY(0)
+      }
+    }
+
+    .ea-badge {
+      background: rgba(255, 255, 255, .2);
+      padding: 4px 12px;
+      font-weight: 900;
+      letter-spacing: 2px
+    }
+
+    .ea-code {
+      background: #fff;
+      color: #cc0022;
+      padding: 5px 16px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      cursor: pointer;
+      border: none;
+      font-family: 'Unbounded', sans-serif;
+      font-size: 11px;
+      transition: background .15s
+    }
+
+    .ea-code:hover {
+      background: #ffe0e4
+    }
+
+    .ea-timer {
+      opacity: .8;
+      font-size: 10px
+    }
+
+    .ea-close {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, .6);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 4px 8px;
+      font-family: sans-serif;
+      line-height: 1
+    }
+
+    .ea-close:hover {
+      color: #fff
+    }
+
+    .p-btn {
+      cursor: pointer !important
+    }
+  </style>
+  <div id="ea-banner">
+    <span class="ea-badge">⚡ EARLY ACCESS</span>
+    <span>50% OFF — use code at checkout:</span>
+    <button class="ea-code" id="copy-code" onclick="copyCode()" title="Click to copy">LAUNCH50</button>
+    <span class="ea-timer">⏱ <span id="ea-countdown">47:59:59</span> left</span>
+    <button class="ea-close" onclick="document.getElementById('ea-banner').style.display='none'">✕</button>
+  </div>
+  <script>
+    function copyCode() {
+      navigator.clipboard.writeText('LAUNCH50').then(() => {
+        const b = document.getElementById('copy-code'), o = b.textContent;
+        b.textContent = '✓ COPIED!'; b.style.background = '#00ff88'; b.style.color = '#000';
+        setTimeout(() => { b.textContent = o; b.style.background = '#fff'; b.style.color = '#cc0022'; }, 2000);
+      });
+      document.getElementById('pricing')?.scrollIntoView({ behavior: 'smooth' });
+      trackEvent('coupon_copy', { code: 'LAUNCH50' });
+    }
+    (function () {
+      const K = 'vp_ea_end';
+      if (!sessionStorage.getItem(K)) sessionStorage.setItem(K, Date.now() + 48 * 3600000);
+      function tick() {
+        const r = Math.max(0, sessionStorage.getItem(K) - Date.now()), el = document.getElementById('ea-countdown');
+        if (el) el.textContent = [Math.floor(r / 3600000), Math.floor(r % 3600000 / 60000), Math.floor(r % 60000 / 1000)].map(n => String(n).padStart(2, '0')).join(':');
+        if (r > 0) setTimeout(tick, 1000); else { const b = document.getElementById('ea-banner'); if (b) b.style.display = 'none'; }
+      }
+      tick();
+    })();
+  </script>
+
+  <!-- Cloudflare Web Analytics (replace token after enabling in CF dashboard) -->
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js'
+    data-cf-beacon='{"token":"ANALYTICS_TOKEN_HERE"}'></script>
+
+  <!-- ── SLIME NEURAL BACKGROUND (hero) ─────────────────────────────────── -->
+  <script>
+    (function () {
+      const canvas = document.getElementById('hero-canvas');
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      const SENSOR_ANGLE = Math.PI / 4;
+      const SENSOR_DIST = 22;
+      const TURN_SPEED = 0.28;
+      const MOVE_SPEED = 1.9;
+      const PARTICLE_N = 3000;
+      let width, height, trailData, particles = [];
+
+      function slimeInit() {
+        width = canvas.width = canvas.offsetWidth || window.innerWidth;
+        height = canvas.height = canvas.offsetHeight || window.innerHeight;
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, width, height);
+        particles = [];
+        for (let i = 0; i < PARTICLE_N; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            angle: Math.random() * Math.PI * 2
+          });
+        }
+      }
+
+      function getPixel(x, y) {
+        if (x < 0 || x >= width || y < 0 || y >= height) return 0;
+        const idx = (Math.floor(y) * width + Math.floor(x)) * 4;
+        return trailData[idx + 1]; // green channel = trail strength
+      }
+
+      function slimeLoop() {
+        trailData = ctx.getImageData(0, 0, width, height).data;
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          const v1 = getPixel(p.x + Math.cos(p.angle - SENSOR_ANGLE) * SENSOR_DIST,
+            p.y + Math.sin(p.angle - SENSOR_ANGLE) * SENSOR_DIST);
+          const v2 = getPixel(p.x + Math.cos(p.angle) * SENSOR_DIST,
+            p.y + Math.sin(p.angle) * SENSOR_DIST);
+          const v3 = getPixel(p.x + Math.cos(p.angle + SENSOR_ANGLE) * SENSOR_DIST,
+            p.y + Math.sin(p.angle + SENSOR_ANGLE) * SENSOR_DIST);
+          if (v2 > v1 && v2 > v3) { /* keep going */ }
+          else if (v2 < v1 && v2 < v3) p.angle += (Math.random() - 0.5) * 2 * TURN_SPEED;
+          else if (v1 > v3) p.angle -= TURN_SPEED;
+          else if (v3 > v1) p.angle += TURN_SPEED;
+          p.x += Math.cos(p.angle) * MOVE_SPEED;
+          p.y += Math.sin(p.angle) * MOVE_SPEED;
+          if (p.x < 0 || p.x >= width) p.angle = Math.PI - p.angle;
+          if (p.y < 0 || p.y >= height) p.angle = -p.angle;
+          // VeilPiercer cyan trail deposit
+          ctx.fillStyle = 'rgba(0, 229, 255, 0.45)';
+          ctx.fillRect(p.x | 0, p.y | 0, 1, 1);
+        }
+        // biologic decay / diffuse
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.048)';
+        ctx.fillRect(0, 0, width, height);
+        requestAnimationFrame(slimeLoop);
+      }
+
+      window.addEventListener('resize', slimeInit);
+      slimeInit();
+      slimeLoop();
+    })();
+  </script>
+  <!-- ── NEXUS LIVE WebSocket BRIDGE ─────────────────────────────────────── -->
+  <script>
+    (function () {
+      const NEXUS_WS = 'ws://localhost:8000/ws';
+      const NEXUS_API = 'http://localhost:8000';
+      const bar = document.getElementById('nexus-bar');
+      const nbStatus = document.getElementById('nb-status');
+      const nbCpu = document.getElementById('nb-cpu');
+      const nbRam = document.getElementById('nb-ram');
+      const nbSignals = document.getElementById('nb-signals');
+      const nbAgents = document.getElementById('nb-agents');
+      const nbMode = document.getElementById('nb-mode');
+      const nbHealer = document.getElementById('nb-healer');
+
+      let ws, reconnectT, agentCount = 0;
+
+      function setMetric(el, label, val, warnThresh, alertThresh) {
+        const n = parseFloat(val);
+        el.className = 'nb-metric' + (n >= alertThresh ? ' alert' : n >= warnThresh ? ' warn' : '');
+        el.innerHTML = label + ' <b>' + val + '</b>';
+      }
+
+      function onData(d) {
+        if (d.system) {
+          const cpu = d.system.cpu_pct.toFixed(0);
+          const ram = d.system.ram_pct.toFixed(0);
+          setMetric(nbCpu, 'CPU', cpu + '%', 70, 88);
+          setMetric(nbRam, 'RAM', ram + '%', 80, 92);
+        }
+        if (d.bus) {
+          setMetric(nbSignals, 'SIGNALS', d.bus.live_signals, 20, 40);
+        }
+        if (d.agents && Array.isArray(d.agents)) {
+          agentCount = d.agents.length;
+        }
+        if (typeof d.agent === 'string' && d.event === 'agent_run') {
+          // count unique agents from runs
+        }
+        if (agentCount > 0) {
+          setMetric(nbAgents, 'AGENTS', agentCount, 10, 14);
+        }
+        if (d.mode) {
+          nbMode.textContent = '◈ ' + d.mode + ' MODE';
+        }
+        if (d.healer && d.healer.recent_repairs && d.healer.recent_repairs.length > 0) {
+          const r = d.healer.recent_repairs[0];
+          const ago = Math.round(r.ago_sec);
+          nbHealer.textContent = '⚡ HEALER: ' + r.action + ' ' + ago + 's ago';
+        } else {
+          nbHealer.textContent = '';
+        }
+      }
+
+      function connect() {
+        clearTimeout(reconnectT);
+        try {
+          ws = new WebSocket(NEXUS_WS);
+          ws.onopen = () => {
+            bar.className = 'connected';
+            nbStatus.textContent = 'NEXUS ANTIGRAVITY · LIVE';
+            // Also pull /agents count
+            fetch(NEXUS_API + '/agents').then(r => r.json()).then(d => {
+              if (d.agents) agentCount = Object.keys(d.agents).length;
+            }).catch(() => { });
+          };
+          ws.onmessage = (e) => {
+            try { onData(JSON.parse(e.data)); } catch (_) { }
+          };
+          ws.onclose = () => {
+            bar.className = 'error';
+            nbStatus.textContent = 'NEXUS · RECONNECTING…';
+            reconnectT = setTimeout(connect, 4000);
+          };
+          ws.onerror = () => {
+            bar.className = 'error';
+            nbStatus.textContent = 'NEXUS · OFFLINE';
+          };
+        } catch (e) {
+          bar.className = 'error';
+          nbStatus.textContent = 'NEXUS · OFFLINE';
+          reconnectT = setTimeout(connect, 8000);
+        }
+      }
+
+      // Fallback: poll /health if WS cant reach
+      function pollHealth() {
+        fetch(NEXUS_API + '/health').then(r => r.json()).then(d => {
+          if (bar.className !== 'connected') {
+            bar.className = 'connected';
+            nbStatus.textContent = 'NEXUS ANTIGRAVITY · POLL';
+          }
+          onData(d);
+        }).catch(() => {
+          if (bar.className !== 'connected') {
+            bar.className = 'error';
+            nbStatus.textContent = 'NEXUS · OFFLINE';
+          }
+        });
+      }
+
+      connect();
+      setInterval(pollHealth, 5000); // health poll as backup
+    })();
+  </script>
+
+</body>
+
+</html>
