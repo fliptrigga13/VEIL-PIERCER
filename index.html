@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -2069,17 +2069,26 @@
 
   <!-- ═══════════════════ NEXUS PONG ═══════════════════ -->
   <section id="nexus-pong" style="background:var(--black);padding:80px 0 0;overflow:hidden;">
-    <div style="padding:0 48px 40px;">
-      <div class="sec-tag">Interactive · Play</div>
-      <h2 style="font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(32px,5vw,64px);letter-spacing:-2px;line-height:.95;margin-bottom:12px;">
-        UNIVERS ULTRA <span style="color:var(--vis)">PONG</span>
-      </h2>
-      <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:18px;color:rgba(221,234,245,.4);max-width:560px;line-height:1.6;">
-        Infinite levels. AI opponent that evolves. Neon particle physics. Press <strong style="color:var(--vis)">Space</strong> or click to begin.
-      </p>
+    <div style="padding:0 48px 40px;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px;">
+      <div>
+        <div class="sec-tag">Interactive · Play</div>
+        <h2 style="font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(32px,5vw,64px);letter-spacing:-2px;line-height:.95;margin-bottom:12px;">
+          UNIVERS ULTRA <span style="color:var(--vis)">PONG</span>
+        </h2>
+        <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:rgba(221,234,245,.4);max-width:500px;line-height:1.6;">
+          Infinite levels. AI that evolves. Click the game to start — arrows or mouse to move.
+        </p>
+      </div>
+      <a href="https://fliptrigga13.github.io/nexus-ultra/nexus-pong.html" target="_blank"
+         style="font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;letter-spacing:2px;
+                padding:12px 28px;background:var(--vis);color:var(--black);text-decoration:none;
+                white-space:nowrap;transition:all .15s;display:inline-block;"
+         onmouseover="this.style.background='#fff'" onmouseout="this.style.background='var(--vis)'">
+        ▶ PLAY FULL SCREEN →
+      </a>
     </div>
     <div id="pong-wrap" style="position:relative;width:100%;background:#000005;border-top:1px solid var(--rim);border-bottom:1px solid var(--rim);">
-      <div id="pong-ui" style="position:absolute;top:0;left:0;width:100%;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;pointer-events:none;z-index:10;font-family:'Fira Code',monospace;">
+      <div style="position:absolute;top:0;left:0;width:100%;padding:10px 24px;display:flex;justify-content:space-between;align-items:center;pointer-events:none;z-index:10;font-family:'Fira Code',monospace;">
         <div style="text-align:center;">
           <div style="font-size:8px;letter-spacing:3px;color:#333;">YOU</div>
           <div id="vp-p-score" style="font-size:26px;font-weight:bold;color:#00ff41;text-shadow:0 0 16px #00ff41;">0</div>
@@ -2095,23 +2104,48 @@
       </div>
       <div id="vp-msg" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;z-index:20;pointer-events:none;">
         <div style="font-family:'Unbounded',sans-serif;font-size:28px;letter-spacing:6px;color:#fff;text-shadow:0 0 24px var(--vis);animation:vpPulse 1s infinite;">NEXUS PONG</div>
-        <div style="font-size:10px;letter-spacing:3px;color:#555;margin-top:8px;font-family:'Fira Code',monospace;">SPACE / CLICK TO BEGIN · ARROWS OR MOUSE</div>
+        <div style="font-size:10px;letter-spacing:3px;color:#555;margin-top:10px;font-family:'Fira Code',monospace;">CLICK GAME TO START &nbsp;·&nbsp; ARROWS / MOUSE TO MOVE</div>
+      </div>
+      <div id="vp-exit" style="position:absolute;top:50px;right:14px;z-index:30;display:none;">
+        <button onclick="vpExitGame()" style="font-family:'Fira Code',monospace;font-size:9px;letter-spacing:2px;background:rgba(0,0,0,.7);color:#555;border:1px solid #222;padding:5px 10px;cursor:pointer;">ESC / EXIT GAME</button>
       </div>
       <div id="vp-lvann" style="position:absolute;left:50%;top:35%;transform:translate(-50%,-50%);text-align:center;z-index:20;pointer-events:none;opacity:0;transition:opacity .4s;">
         <div id="vp-lvtext" style="font-family:'Unbounded',sans-serif;font-size:44px;letter-spacing:8px;color:var(--vis);text-shadow:0 0 32px var(--vis);"></div>
       </div>
-      <canvas id="vp-canvas" style="display:block;width:100%;"></canvas>
+      <canvas id="vp-canvas" tabindex="0" style="display:block;width:100%;outline:none;"></canvas>
     </div>
     <style>
       @keyframes vpPulse{0%,100%{opacity:1}50%{opacity:.55}}
-      #nexus-pong canvas{cursor:none}
+      #nexus-pong canvas{cursor:crosshair}
+      body.pong-active{overflow:hidden!important}
     </style>
     <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
     <script>
     (function(){
       const W=900,H=500,PW=13,PH=85,PS=8,BR=8;
       const C={pl:0x00ff41,ai:0xff0080,ball:0x00cfff};
-      let started=false,pScore=0,aiScore=0,lv=1,spd=5;
+      let started=false,pScore=0,aiScore=0,lv=1,spd=5,gameActive=false;
+
+      // Lock scroll + intercept keys when game is active
+      function lockScroll(){
+        gameActive=true;
+        document.body.classList.add('pong-active');
+        document.getElementById('vp-exit').style.display='block';
+      }
+      window.vpExitGame=function(){
+        gameActive=false;
+        document.body.classList.remove('pong-active');
+        document.getElementById('vp-exit').style.display='none';
+      };
+
+      // Prevent page scroll from arrow keys and spacebar while playing
+      window.addEventListener('keydown', function(e){
+        if(gameActive && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)){
+          e.preventDefault();
+        }
+        if(e.key==='Escape') window.vpExitGame();
+      }, {passive:false});
+
       class VP extends Phaser.Scene{
         constructor(){super('VP')}
         create(){
@@ -2121,15 +2155,22 @@
           this.resetBall();this.trail=[];this.pts=[];
           this.cur=this.input.keyboard.createCursorKeys();
           this.sk=this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-          this.input.on('pointerdown',()=>{if(!started)this.go()});
-          this.input.on('pointermove',(p)=>{if(started)this.pp.y=Phaser.Math.Clamp(p.y,PH/2,H-PH/2)});
-          this.sk.on('down',()=>{if(!started)this.go()});
+
+          // Phaser pointer events
+          this.input.on('pointerdown', ()=>{ if(!started){ lockScroll(); this.go(); } });
+          this.input.on('pointermove', (p)=>{ if(started) this.pp.y=Phaser.Math.Clamp(p.y,PH/2,H-PH/2); });
+          this.sk.on('down', ()=>{ if(!started){ lockScroll(); this.go(); } });
+
+          // Native canvas click fallback
+          const cv=document.getElementById('vp-canvas');
+          cv.addEventListener('click', ()=>{ if(!started){ lockScroll(); this.go(); cv.focus(); } });
+          cv.focus();
         }
         resetBall(tp=Math.random()>.5){
           const s=spd+(lv-1)*.35,a=(Math.random()*36-18)*Math.PI/180;
           this.ball={x:W/2,y:H/2,vx:(tp?-1:1)*s*Math.cos(a),vy:s*Math.sin(a)};this.trail=[];
         }
-        go(){started=true;document.getElementById('vp-msg').style.display='none';this.showLv()}
+        go(){started=true;document.getElementById('vp-msg').style.display='none';this.showLv();}
         showLv(){
           const el=document.getElementById('vp-lvann');
           document.getElementById('vp-lvtext').textContent='LEVEL  '+lv;
@@ -2141,8 +2182,8 @@
           this.stars.forEach(s=>{s.a+=s.s*.018;if(s.a>1)s.a=0;g.fillStyle(0xffffff,Math.sin(s.a*Math.PI)*.5);g.fillCircle(s.x,s.y,s.r)});
           for(let y=0;y<H;y+=22){g.fillStyle(0x1a1a1a,1);g.fillRect(W/2-1,y,2,11)}
           if(!started){this.dp(g,this.pp,C.pl);this.dp(g,this.ai,C.ai);return}
-          if(this.cur.up.isDown)this.pp.y=Math.max(PH/2,this.pp.y-PS);
-          if(this.cur.down.isDown)this.pp.y=Math.min(H-PH/2,this.pp.y+PS);
+          if(this.cur.up.isDown)   this.pp.y=Math.max(PH/2,this.pp.y-PS);
+          if(this.cur.down.isDown) this.pp.y=Math.min(H-PH/2,this.pp.y+PS);
           const as=Math.min(2.8+lv*.45,11);
           if(this.ai.y<this.ball.y-7)this.ai.y=Math.min(H-PH/2,this.ai.y+as);
           if(this.ai.y>this.ball.y+7)this.ai.y=Math.max(PH/2,this.ai.y-as);
@@ -2181,6 +2222,7 @@
 
   <!-- ═══════════════════ BUYERS ═══════════════════ -->
   <section class="sec" id="buyers" style="background:var(--paper);color:var(--black)">
+
 
     <div class="sec-tag" style="color:rgba(10,10,10,.3)"><span
         style="display:inline-block;width:24px;height:1px;background:rgba(10,10,10,.3);margin-right:12px;vertical-align:middle"></span>Who
