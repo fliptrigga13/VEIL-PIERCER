@@ -2718,8 +2718,10 @@
     //  NEXUS ULTRA BACKEND CONNECTION LAYER
     //  Live connection to http://127.0.0.1:3000
     // ══════════════════════════════════════════════════
+    const _IS_LOCAL = ['localhost','127.0.0.1'].includes(window.location.hostname);
+    const _PUBLIC_URL = localStorage.getItem('nexus_public_url') || null;
     const NX = {
-      base: 'http://127.0.0.1:3000',
+      base: _IS_LOCAL ? 'http://127.0.0.1:3000' : _PUBLIC_URL,
       headers: { 'Content-Type': 'application/json', 'x-api-key': 'Burton' },
       async get(path) {
         try {
@@ -3185,8 +3187,10 @@
   <!-- ── NEXUS LIVE WebSocket BRIDGE ─────────────────────────────────────── -->
   <script>
     (function () {
-      const NEXUS_WS = 'ws://localhost:8000/ws';
-      const NEXUS_API = 'http://localhost:8000';
+      const _WS_LOCAL = ['localhost','127.0.0.1'].includes(window.location.hostname);
+      const _WS_PUBLIC = localStorage.getItem('nexus_ws_url') || null;
+      const NEXUS_WS  = _WS_LOCAL ? 'ws://localhost:8000/ws' : _WS_PUBLIC;
+      const NEXUS_API = _WS_LOCAL ? 'http://localhost:8000'  : (localStorage.getItem('nexus_public_url') || null);
       const bar = document.getElementById('nexus-bar');
       const nbStatus = document.getElementById('nb-status');
       const nbCpu = document.getElementById('nb-cpu');
@@ -3237,6 +3241,17 @@
 
       function connect() {
         clearTimeout(reconnectT);
+        // Don't attempt WebSocket when no URL is configured (GitHub Pages without ngrok)
+        if (!NEXUS_WS) {
+          bar.className = 'error';
+          nbStatus.textContent = 'NEXUS · STANDBY';
+          // Show tip once per session
+          if (!sessionStorage.getItem('_vp_tip')) {
+            sessionStorage.setItem('_vp_tip', '1');
+            console.info('[VeilPiercer] To connect live: localStorage.setItem("nexus_ws_url","wss://YOUR.ngrok.app/ws")');
+          }
+          return; // No reconnect loop
+        }
         try {
           ws = new WebSocket(NEXUS_WS);
           ws.onopen = () => {
