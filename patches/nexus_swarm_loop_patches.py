@@ -11,13 +11,19 @@ RESEARCH SOURCES:
   [R2] Agent Process Reward Models (AgentPRM) — arXiv:2502.10325
        Per-step reward shaping beats sparse outcome-only scoring.
   [R3] LLM-Enhanced PSO — arXiv:2504.14126 / IEEE:10976715
-       Linearly decaying inertia (0.9→0.4) + LLM position suggestions = 20-60% fewer evals.
+       Linearly decaying inertia (0.9→0.4) + TVAC coefficients = 20-60% fewer evals.
   [R4] Redis State Management for Agents — sitepoint.com/state-management-for-long-running-agents
-       TTL-keyed working memory prevents blackboard bloat; per-agent isolation during gather().
-  [R5] asyncio + Redis concurrency — python.useinstructor.com/blog/2023/11/13/learn-async/
-       asyncio.Semaphore caps Ollama concurrency; prevents OOM on 7B models.
-  [R6] Self-Critique in Multi-Agent LLMs — arxiv.org/abs/2502.10325
-       CRITIC tier genuinely improves output quality; critique context should flow to REWARD.
+       TTL-keyed working memory; Lua scripting for atomic first-write TTL.
+  [R5] asyncio best practices — python.useinstructor.com/blog/2023/11/13/learn-async/
+       asyncio.Semaphore caps Ollama concurrency; return_exceptions=True on gather().
+  [R6] Multi-Agent Reflexion (MAR) — arXiv:2512.20845
+       CRITIC diversity (distinct personas) prevents degeneration-of-thought.
+  [R7] LLM-as-Judge bias — arXiv:2410.02736 + arXiv:2410.21819
+       Verbosity bias + self-preference bias; z-score normalisation per [TYPE] corrects MVP election.
+  [R8] PSO convergence — Frontiers 2024 + numberanalytics.com/blog/comprehensive-2024-guide-pso
+       Ring topology + TVAC prevents premature convergence in small swarms (N≤10).
+  [R9] Redis Streams — redis.io/blog/ai-agent-architecture-patterns/
+       XADD/XREADGROUP for tier handoff gives at-least-once delivery + crash recovery.
 """
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -351,35 +357,290 @@ class MVPTracker:
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────────────────
+# PATCH 9 — PSO TVAC (Time-Varying Acceleration Coefficients)
+# Replaces fixed c1=c2=1.5 from PATCH 4.
+# Backed by [R8]: TVAC + ring topology is the correct config for N=8 swarms.
+# ─────────────────────────────────────────────────────────────────────────────
+
+def pso_tvac_coefficients(current_iteration: int, max_iterations: int) -> tuple[float, float]:
+    """
+    Time-Varying Acceleration Coefficients (TVAC).
+    c1: 2.5 → 0.5  (personal best pull decreases — reduces over-attachment to local optima)
+    c2: 0.5 → 2.5  (global best pull increases — exploitation ramps up as swarm matures)
+
+    Backed by [R8]: TVAC outperforms fixed coefficients on small swarms (N≤10) by
+    preserving diversity early and converging reliably late.
+
+    Usage:
+        c1, c2 = pso_tvac_coefficients(iteration, max_iter)
+        velocity = (w * velocity
+                    + c1 * r1 * (pbest - position)
+                    + c2 * r2 * (gbest - position))
+    """
+    t = current_iteration / max(max_iterations, 1)
+    c1 = 2.5 - 2.0 * t   # 2.5 → 0.5
+    c2 = 0.5 + 2.0 * t   # 0.5 → 2.5
+    return c1, c2
+
+
+def pso_ring_neighbors(agent_index: int, n_agents: int) -> tuple[int, int]:
+    """
+    Ring topology: each particle's "global best" is the best among its 2 neighbors.
+    Backed by [R8]: ring topology prevents full-swarm collapse to one attractor
+    when N=8, which is too small for global-best topology to maintain diversity.
+
+    Usage:
+        left, right = pso_ring_neighbors(i, len(particles))
+        local_best = max(particles[left], particles[i], particles[right], key=lambda p: p.score)
+    """
+    left  = (agent_index - 1) % n_agents
+    right = (agent_index + 1) % n_agents
+    return left, right
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATCH 10 — Z-score normalisation for MVP election
+# Backed by [R7]: verbosity bias inflates research/analysis scores by ~0.1 raw.
+# Z-scoring per type puts all agents on the same competitive footing.
+# ─────────────────────────────────────────────────────────────────────────────
+
+import statistics
+
+class ScoreNormaliser:
+    """
+    Maintains a rolling window of scores per output_type.
+    Before MVP election, z-score all scores so no type has a structural advantage.
+
+    Backed by [R7]: "Justice or Prejudice?" (arXiv:2410.02736) + PRS length-aware
+    scoring — verbosity bias adds ~0.1 to prose types on standard rubrics.
+
+    Usage:
+        normaliser = ScoreNormaliser(window=20)
+
+        # After each agent produces a scored result:
+        normaliser.record(output_type, raw_score)
+
+        # Before MVP election, normalise all candidate scores:
+        z_scores = {agent: normaliser.normalise(output_type, raw_score)
+                    for agent, output_type, raw_score in candidates}
+        mvp = max(z_scores, key=z_scores.get)
+    """
+    def __init__(self, window: int = 20):
+        self._window = window
+        self._history: dict[str, list[float]] = {
+            "code": [], "plan": [], "research": [], "analysis": []
+        }
+
+    def record(self, output_type: str, score: float) -> None:
+        buf = self._history.setdefault(output_type, [])
+        buf.append(score)
+        if len(buf) > self._window:
+            buf.pop(0)
+
+    def normalise(self, output_type: str, score: float) -> float:
+        buf = self._history.get(output_type, [])
+        if len(buf) < 3:
+            return score   # not enough history yet — return raw
+        mu  = statistics.mean(buf)
+        sig = statistics.stdev(buf) or 1e-6
+        return (score - mu) / sig   # z-score: mean 0, std 1 within type
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATCH 11 — Redis atomic first-write TTL via Lua script
+# Backed by [R4] + [R9]: pipeline SET+EXPIRE is NOT atomic — Lua script is.
+# Prevents race where two agents write the same key and TTL gets overwritten.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Lua script: INCR + EXPIRE only on first write (count == 1)
+# Call with: redis_client.eval(LUA_ATOMIC_TTL, 1, key, ttl_seconds)
+LUA_ATOMIC_TTL = """
+local count = redis.call('INCR', KEYS[1])
+if count == 1 then
+  redis.call('EXPIRE', KEYS[1], ARGV[1])
+end
+return count
+"""
+
+async def atomic_blackboard_write(
+    redis_client,
+    agent_id: str,
+    content: dict,
+    ttl: int = BLACKBOARD_TTL_SECONDS,
+) -> None:
+    """
+    Atomically write agent output to blackboard with guaranteed TTL.
+    Uses MULTI/EXEC pipeline for hset + expire — atomic, no partial reads.
+    Backed by [R4]: partial reads occur when hset and expire are separate calls.
+
+    Usage:
+        await atomic_blackboard_write(redis, agent["name"], entry_dict)
+    """
+    key = f"bb:output:{agent_id}:{int(time.time())}"
+    async with redis_client.pipeline(transaction=True) as pipe:
+        pipe.hset(key, mapping={k: str(v) for k, v in content.items()})
+        pipe.expire(key, ttl)
+        await pipe.execute()
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATCH 12 — asyncio.gather() with return_exceptions + quorum early-exit
+# Backed by [R5]: without return_exceptions=True, one agent crash kills the tier.
+# Quorum pattern (as_completed) prevents the slowest Ollama instance from
+# blocking the entire CRITIC tier.
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def run_tier_with_quorum(
+    agent_coroutines: list,
+    quorum: int | None = None,
+) -> list:
+    """
+    Run a tier's agents with:
+      - return_exceptions=True  → one failure doesn't cancel others [R5]
+      - optional quorum         → exit early once N results are collected
+        (use for CRITIC tier where you don't need all 4 critics to proceed)
+
+    Args:
+        agent_coroutines : list of coroutines to run in parallel
+        quorum           : stop collecting after this many successful results.
+                           None = wait for all (use for GENERATOR + OPTIMIZER).
+
+    Usage — CRITIC tier (stop at 3 of 4):
+        results = await run_tier_with_quorum(critic_coros, quorum=3)
+
+    Usage — GENERATOR tier (need all):
+        results = await run_tier_with_quorum(generator_coros)
+    """
+    if quorum is None or quorum >= len(agent_coroutines):
+        # Standard gather — wait for all, preserve exceptions as values
+        raw = await asyncio.gather(*agent_coroutines, return_exceptions=True)
+        return [r for r in raw if not isinstance(r, Exception)]
+
+    # Early-exit quorum using as_completed
+    tasks   = [asyncio.create_task(c) for c in agent_coroutines]
+    results = []
+    try:
+        for coro in asyncio.as_completed(tasks):
+            try:
+                result = await coro
+                results.append(result)
+            except Exception:
+                pass   # one agent failure is non-fatal
+            if len(results) >= quorum:
+                break
+    finally:
+        # Cancel any tasks still running beyond quorum
+        for t in tasks:
+            if not t.done():
+                t.cancel()
+    return results
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATCH 13 — CRITIC persona definitions (prevent degeneration-of-thought)
+# Backed by [R6]: MAR (arXiv:2512.20845) — CRITIC agents with distinct
+# epistemic stances improve output quality; copies of GENERATOR prompts don't.
+# ─────────────────────────────────────────────────────────────────────────────
+
+CRITIC_PERSONA_SUFFIXES = {
+    "VALIDATOR": """
+Your epistemic stance: EVIDENCE DEMAND.
+Your only job is to challenge claims that lack specific, verifiable support.
+Flag every assertion not backed by concrete detail. Ignore stylistic quality.
+End with [CRITIQUE: <one specific unsupported claim or 'all claims grounded'>]
+Always end with [TYPE: analysis]
+""",
+    "SENTINEL": """
+Your epistemic stance: THREAT DETECTION.
+Your only job is to find logical inconsistencies, edge cases, and failure modes.
+Ignore whether the output reads well — find what breaks it.
+End with [CRITIQUE: <one specific logical flaw or 'no critical flaws found'>]
+Always end with [TYPE: analysis]
+""",
+    "METACOG": """
+Your epistemic stance: REASONING AUDIT.
+Your only job is to evaluate the quality of reasoning steps, not the conclusion.
+Did the agent skip steps? Make leaps? Use circular logic?
+End with [CRITIQUE: <one specific reasoning gap or 'reasoning chain is sound'>]
+Always end with [TYPE: analysis]
+""",
+    "EXECUTIONER": """
+Your epistemic stance: SPECIFICATION COMPLIANCE.
+Your only job is to check whether the output exactly meets the original task spec.
+Did it answer what was asked? Is anything missing from the spec?
+End with [CRITIQUE: <one specific spec gap or 'fully spec-compliant'>]
+Always end with [TYPE: analysis]
+""",
+}
+
+def apply_critic_personas(agents: list) -> list:
+    """
+    Replaces CRITIC agents' generic 'critique this' role tails with
+    distinct epistemic stance personas. Call after apply_type_suffixes().
+
+    Backed by [R6]: diversity of critic stance is more important than
+    number of critics — 4 identical critics = 1 critic with more tokens.
+
+    Usage:  AGENTS = apply_critic_personas(AGENTS)
+    """
+    for agent in agents:
+        persona = CRITIC_PERSONA_SUFFIXES.get(agent["name"])
+        if persona:
+            # Replace any existing TYPE/CRITIQUE suffix with the full persona
+            base_role = re.sub(
+                r'\n\nAlways end your response with.*$', '', agent["role"], flags=re.DOTALL
+            ).rstrip()
+            agent["role"] = base_role + persona
+    return agents
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # INTEGRATION CHECKLIST — apply in this order
 # ─────────────────────────────────────────────────────────────────────────────
 """
 ORDER OF CHANGES IN nexus_swarm_loop.py:
 
 1. After imports at top:
-   → Paste parse_output_type(), parse_critique(), normalise_score_by_type()
-   → Paste MVPTracker class
-   → Add: mvp_tracker = MVPTracker()
-   → Add: _ollama_semaphore = asyncio.Semaphore(MAX_CONCURRENT_OLLAMA_CALLS)
+   → Paste all parse helpers: parse_output_type(), parse_critique(), normalise_score_by_type()
+   → Paste MVPTracker, ScoreNormaliser classes
+   → Add module-level instances:
+       mvp_tracker  = MVPTracker()
+       score_norm   = ScoreNormaliser(window=20)
+       _ollama_sem  = asyncio.Semaphore(MAX_CONCURRENT_OLLAMA_CALLS)
 
 2. After AGENTS = [...] definition:
-   → Add: AGENTS = apply_type_suffixes(AGENTS)
+   → Add:  AGENTS = apply_type_suffixes(AGENTS)
+   → Add:  AGENTS = apply_critic_personas(AGENTS)   ← NEW [R6]
    → Replace REWARD agent's "role" with REWARD_ROLE
 
 3. In your Ollama HTTP call function:
    → Replace httpx.post(...) with: await call_ollama_gated(client, url, payload)
 
-4. In your bb.push_output() call (after each agent returns):
-   → Replace with: push_output_with_metadata(redis_client, BB_KEY, result)
+4. In your bb.push_output() call:
+   → Replace with: await atomic_blackboard_write(redis_client, agent_name, entry)  ← [R4]
+   → Also: score_norm.record(output_type, raw_score)
 
-5. In your PSO update loop:
-   → Replace fixed inertia w with: w = pso_inertia_weight(iteration, max_iter)
-   → Set velocity clamp: v = max(-VMAX, min(VMAX, v))
+5. In your GENERATOR tier execution:
+   → Replace asyncio.gather(*coros) with:
+     results = await run_tier_with_quorum(coros)              # wait all [R5]
 
-6. In your final_score computation (L682–704):
-   → Replace the existing formula with: compute_final_score(base, type, tier, lat, load)
+6. In your CRITIC tier execution:
+   → Replace asyncio.gather(*coros) with:
+     results = await run_tier_with_quorum(coros, quorum=3)    # early-exit [R5]
 
-7. After MVP is selected each cycle:
+7. In your PSO update loop:
+   → Replace fixed w with:   w = pso_inertia_weight(iteration, max_iter)
+   → Replace fixed c1,c2 with: c1, c2 = pso_tvac_coefficients(iteration, max_iter)  ← NEW [R8]
+   → Use ring topology:       left, right = pso_ring_neighbors(i, n_agents)          ← NEW [R8]
+   → Clamp velocity:          v = max(-VMAX, min(VMAX, v))
+
+8. In your final_score computation (L682–704):
+   → Replace existing formula with: compute_final_score(base, type, tier, lat, load)
+
+9. Before MVP election each cycle:
+   → z_scores = {a: score_norm.normalise(type, score) for a, type, score in candidates}
+   → mvp = max(z_scores, key=z_scores.get)                                           ← NEW [R7]
    → warning = mvp_tracker.record(mvp_name, output_type)
-   → if warning: print/log the warning
+   → if warning: log(warning)
 """
